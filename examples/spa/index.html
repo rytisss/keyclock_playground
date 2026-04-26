@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Keycloak SPA — Auth Code + PKCE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { font: 14px/1.5 system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+      h1 { margin-bottom: 0.25rem; }
+      .row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+      button { padding: 0.5rem 0.9rem; cursor: pointer; }
+      pre { background: #f5f5f5; padding: 0.75rem; border-radius: 4px; overflow: auto; max-height: 280px; }
+      .muted { color: #666; }
+      .ok { color: #0a7; }
+      .err { color: #c33; }
+    </style>
+  </head>
+  <body>
+    <h1>Keycloak SPA</h1>
+    <p class="muted">Authorization Code + PKCE, vanilla JS, no library.</p>
+
+    <div class="row">
+      <button id="login">Login</button>
+      <button id="logout">Logout</button>
+      <button id="callPublic">GET /public</button>
+      <button id="callProtected">GET /protected</button>
+      <button id="callAdmin">GET /admin</button>
+    </div>
+
+    <h3>Status</h3>
+    <pre id="status">not logged in</pre>
+
+    <h3>Access token (decoded payload)</h3>
+    <pre id="claims">—</pre>
+
+    <h3>API response</h3>
+    <pre id="apiOut">—</pre>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
