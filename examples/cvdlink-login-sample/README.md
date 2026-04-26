@@ -1,4 +1,4 @@
-# SPA — Auth Code + PKCE
+# CVDLINK Login Sample — Auth Code + PKCE
 
 Vanilla HTML + JS demonstrating the Authorization Code + PKCE flow against Keycloak. No framework, no library — every step is in `app.js`.
 

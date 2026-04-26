@@ -39,7 +39,7 @@ curl -H "Authorization: Bearer $TOKEN" http://localhost:3001/protected
 curl -H "Authorization: Bearer $TOKEN" http://localhost:3001/admin   # 403 — service account has no admin role
 ```
 
-To hit `/admin`, get a token for the `admin` user via the SPA (Auth Code + PKCE).
+To hit `/admin`, get a token for the `admin` user via the CVDLINK Login Sample (Auth Code + PKCE).
 
 ## How it validates tokens
 

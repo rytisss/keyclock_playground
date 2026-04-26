@@ -1,6 +1,6 @@
 # 3. OIDC Auth Flows
 
-Two flows cover ~90% of real-world Keycloak deployments:
+Two flows are covered:
 
 - **Authorization Code + PKCE** — for any user-facing app (SPA, mobile, native, server-rendered web).
 - **Client Credentials** — for service-to-service (no user involved).
@@ -53,21 +53,21 @@ logout:    http://localhost:8081/realms/playground/protocol/openid-connect/logou
 
 ### Working code
 
-See [`examples/spa`](../examples/spa). It's ~150 lines of vanilla JS — no library — so you can read every step.
+See [`examples/cvdlink-login-sample`](../examples/cvdlink-login-sample). It's ~150 lines of vanilla JS — no library — so you can read every step.
 
 ### Walkthrough
 
-The screenshots below were captured against the local stack (`docker compose up -d`, SPA on `:5173`, Node API on `:3001`). The realm has two demo users: `researcher`/`researcher123` with role `user`, and `admin`/`admin123` with roles `user` + `admin`.
+The screenshots below were captured against the local stack (`docker compose up -d`, sample on `:5173`, Node API on `:3001`). The realm has two demo users: `researcher`/`researcher123` with role `user`, and `admin`/`admin123` with roles `user` + `admin`.
 
-**1. SPA before login** — no token in `sessionStorage`, the API panel is empty.
+**1. Sample app before login** — no token in `sessionStorage`, the API panel is empty.
 
-![SPA pre-login](images/01-spa-pre-login.png)
+![Login sample pre-login](images/01-spa-pre-login.png)
 
-**2. Keycloak login form** — clicking *Login* redirects to the realm's `/auth` endpoint with `code_challenge` + `state` in the query string. The login page uses the custom `cvdlink` theme that swaps the realm-name banner for the cvdlink logo.
+**2. Keycloak login form** — clicking *Login* redirects to the realm's `/auth` endpoint with `code_challenge` + `state` in the query string. The login page uses the custom `cvdlink` theme that swaps the realm-name banner for the CVDLINK logo.
 
 ![Keycloak login form](images/02-keycloak-login.png)
 
-**3. Post-login: decoded access token** — after the redirect back, the SPA exchanged the code (with `code_verifier`) for tokens and decoded the JWT. Note `iss`, `azp=spa-client`, `realm_access.roles=["user"]`.
+**3. Post-login: decoded access token** — after the redirect back, the sample app exchanged the code (with `code_verifier`) for tokens and decoded the JWT. Note `iss`, `azp=spa-client`, `realm_access.roles=["user"]`.
 
 ![Decoded JWT after login](images/03-spa-post-login-claims.png)
 
@@ -238,8 +238,8 @@ GET http://localhost:8081/realms/playground/protocol/openid-connect/logout
 
 This kills the Keycloak SSO session.
 
-**Keycloak 26 requires either `id_token_hint` or `client_id`** on the logout request — passing neither returns `Missing parameters: id_token_hint`. With `id_token_hint` the user is logged out silently; with only `client_id`, Keycloak shows a "do you want to sign out?" confirmation page. The SPA example passes both, so it works in either state.
+**Keycloak 26 requires either `id_token_hint` or `client_id`** on the logout request — passing neither returns `Missing parameters: id_token_hint`. With `id_token_hint` the user is logged out silently; with only `client_id`, Keycloak shows a "do you want to sign out?" confirmation page. The CVDLINK Login Sample passes both, so it works in either state.
 
 ---
 
-**Next:** [`../examples/spa`](../examples/spa) and [`../examples/node-api`](../examples/node-api) — runnable code that implements everything above.
+**Next:** [`../examples/cvdlink-login-sample`](../examples/cvdlink-login-sample) and [`../examples/node-api`](../examples/node-api) — runnable code that implements everything above.
