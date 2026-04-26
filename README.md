@@ -4,7 +4,7 @@ A self-contained Keycloak playground: spin up Keycloak with one command, then wa
 
 ## Table of contents
 
-- [Contents](#contents)
+- [Content](#content)
 - [Quickstart](#quickstart)
 - [Screenshots](#screenshots)
 - [Repo layout](#repo-layout)
@@ -14,7 +14,7 @@ A self-contained Keycloak playground: spin up Keycloak with one command, then wa
 - [Documentation](#documentation)
 - [License](#license)
 
-## Contents
+## Content
 
 - **Keycloak 26 + Postgres** via `docker-compose`
 - **Auto-imported realm** ([`realm-export.json`](realm-export.json)) with clients, roles, and demo users
