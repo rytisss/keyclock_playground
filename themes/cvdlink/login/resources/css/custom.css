@@ -1,0 +1,25 @@
+.pf-v5-c-login__container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.pf-v5-c-login__header,
+.pf-v5-c-login__main {
+  width: 100%;
+}
+
+#kc-header-wrapper {
+  background-image: url('../img/cvdlink_logo.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  height: 120px;
+  width: 100%;
+  margin: 24px auto 8px;
+  text-indent: -9999px;
+  overflow: hidden;
+  white-space: nowrap;
+}

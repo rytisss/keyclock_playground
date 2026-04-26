@@ -1,0 +1,84 @@
+{
+  "realm": "playground",
+  "enabled": true,
+  "displayName": "Playground",
+  "loginTheme": "cvdlink",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "rememberMe": true,
+  "sslRequired": "external",
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "roles": {
+    "realm": [
+      { "name": "user", "description": "Regular authenticated user" },
+      { "name": "admin", "description": "Administrative user" }
+    ]
+  },
+  "users": [
+    {
+      "username": "researcher",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Researcher",
+      "lastName": "User",
+      "email": "researcher@example.com",
+      "credentials": [
+        { "type": "password", "value": "researcher123", "temporary": false }
+      ],
+      "realmRoles": ["user"]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@example.com",
+      "credentials": [
+        { "type": "password", "value": "admin123", "temporary": false }
+      ],
+      "realmRoles": ["user", "admin"]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "spa-client",
+      "name": "SPA Client (public, PKCE)",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:5173/*",
+        "http://localhost:3000/*"
+      ],
+      "webOrigins": [
+        "http://localhost:5173",
+        "http://localhost:3000"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:5173/*##http://localhost:3000/*"
+      }
+    },
+    {
+      "clientId": "node-api",
+      "name": "Node API (confidential, client credentials)",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "node-api-secret-change-me",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "bearerOnly": false,
+      "attributes": {
+        "access.token.lifespan": "300"
+      }
+    }
+  ]
+}
