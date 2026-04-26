@@ -72,7 +72,7 @@ In the `playground` realm, confirm the following resources exist:
 
 - **Clients** → `spa-client` (public, PKCE) and `node-api` (confidential, service account)
 - **Realm roles** → `user`, `admin`
-- **Users** → `demo` (role: user) and `boss` (roles: user + admin)
+- **Users** → `researcher` (role: user) and `admin` (roles: user + admin)
 
 ![Clients list](images/03-clients-list.png)
 
@@ -80,7 +80,7 @@ In the `playground` realm, confirm the following resources exist:
 
 ![Users list](images/04-users-list.png)
 
-> 📸 **Screenshot to capture:** Users page showing `demo` and `boss`.
+> 📸 **Screenshot to capture:** Users page showing `researcher` and `admin`.
 
 ---
 

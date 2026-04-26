@@ -34,6 +34,7 @@ services:
       - "8081:8080"
     volumes:
       - ./realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+      - ./themes/cvdlink:/opt/keycloak/themes/cvdlink:ro
     depends_on:
       postgres:
         condition: service_healthy

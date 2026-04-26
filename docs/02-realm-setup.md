@@ -93,14 +93,14 @@ This client represents a backend service that needs to obtain its own tokens (e.
 ## 2.5 Create users
 
 1. **Users** → **Add user**.
-2. Username: `demo`, Email: `demo@example.com`, Email verified: **ON** → **Create**.
-3. On the user's page → **Credentials** tab → **Set password** → `demo123`, Temporary: **OFF** → **Save**.
+2. Username: `researcher`, Email: `researcher@example.com`, Email verified: **ON** → **Create**.
+3. On the user's page → **Credentials** tab → **Set password** → `researcher123`, Temporary: **OFF** → **Save**.
 4. **Role mapping** tab → **Assign role** → filter by realm roles → check `user` → **Assign**.
-5. Repeat for `boss` with both `user` and `admin` roles.
+5. Repeat for `admin` (password `admin123`) with both `user` and `admin` roles.
 
 ![User role mapping](images/16-user-roles.png)
 
-> 📸 **Screenshot to capture:** the `boss` user's Role mapping showing both roles assigned.
+> 📸 **Screenshot to capture:** the `admin` user's Role mapping showing both roles assigned.
 
 ---
 
@@ -123,8 +123,8 @@ With the realm fully configured, request a token via the password grant **for te
 curl -X POST http://localhost:8081/realms/playground/protocol/openid-connect/token \
   -d "grant_type=password" \
   -d "client_id=spa-client" \
-  -d "username=demo" \
-  -d "password=demo123" | jq .
+  -d "username=researcher" \
+  -d "password=researcher123" | jq .
 ```
 
 Decode the resulting `access_token` at https://jwt.io to inspect claims. The next doc walks through what's inside.

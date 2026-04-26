@@ -55,6 +55,34 @@ logout:    http://localhost:8081/realms/playground/protocol/openid-connect/logou
 
 See [`examples/spa`](../examples/spa). It's ~150 lines of vanilla JS — no library — so you can read every step.
 
+### Walkthrough
+
+The screenshots below were captured against the local stack (`docker compose up -d`, SPA on `:5173`, Node API on `:3001`). The realm has two demo users: `researcher`/`researcher123` with role `user`, and `admin`/`admin123` with roles `user` + `admin`.
+
+**1. SPA before login** — no token in `sessionStorage`, the API panel is empty.
+
+![SPA pre-login](images/01-spa-pre-login.png)
+
+**2. Keycloak login form** — clicking *Login* redirects to the realm's `/auth` endpoint with `code_challenge` + `state` in the query string. The login page uses the custom `cvdlink` theme that swaps the realm-name banner for the cvdlink logo.
+
+![Keycloak login form](images/02-keycloak-login.png)
+
+**3. Post-login: decoded access token** — after the redirect back, the SPA exchanged the code (with `code_verifier`) for tokens and decoded the JWT. Note `iss`, `azp=spa-client`, `realm_access.roles=["user"]`.
+
+![Decoded JWT after login](images/03-spa-post-login-claims.png)
+
+**4. `GET /protected` as `researcher` → 200** — the Node API verified the JWT against the realm's JWKS and returned the bearer's identity and roles.
+
+![/protected returns 200 for researcher](images/04-spa-protected-200.png)
+
+**5. `GET /admin` as `researcher` → 403** — `requireRole("admin")` rejected the request because the token's `realm_access.roles` does not include `admin`.
+
+![/admin returns 403 for researcher](images/05-spa-admin-403-researcher.png)
+
+**6. `GET /admin` as `admin` → 200** — after logging out and back in as `admin`, the same endpoint succeeds because the new token carries the `admin` realm role.
+
+![/admin returns 200 for admin](images/06-spa-admin-200-admin.png)
+
 ---
 
 ## 3.2 Client Credentials
@@ -143,8 +171,8 @@ A Keycloak access token is a signed JWT: `header.payload.signature`, base64url-e
   },
   "scope": "openid email profile",
   "email_verified": true,
-  "preferred_username": "demo",
-  "email": "demo@example.com"
+  "preferred_username": "researcher",
+  "email": "researcher@example.com"
 }
 ```
 

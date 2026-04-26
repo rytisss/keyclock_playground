@@ -2,6 +2,7 @@
   "realm": "playground",
   "enabled": true,
   "displayName": "Playground",
+  "loginTheme": "cvdlink",
   "registrationAllowed": false,
   "loginWithEmailAllowed": true,
   "duplicateEmailsAllowed": false,
@@ -19,26 +20,26 @@
   },
   "users": [
     {
-      "username": "demo",
+      "username": "researcher",
       "enabled": true,
       "emailVerified": true,
-      "firstName": "Demo",
+      "firstName": "Researcher",
       "lastName": "User",
-      "email": "demo@example.com",
+      "email": "researcher@example.com",
       "credentials": [
-        { "type": "password", "value": "demo123", "temporary": false }
+        { "type": "password", "value": "researcher123", "temporary": false }
       ],
       "realmRoles": ["user"]
     },
     {
-      "username": "boss",
+      "username": "admin",
       "enabled": true,
       "emailVerified": true,
-      "firstName": "Boss",
+      "firstName": "Admin",
       "lastName": "User",
-      "email": "boss@example.com",
+      "email": "admin@example.com",
       "credentials": [
-        { "type": "password", "value": "boss123", "temporary": false }
+        { "type": "password", "value": "admin123", "temporary": false }
       ],
       "realmRoles": ["user", "admin"]
     }

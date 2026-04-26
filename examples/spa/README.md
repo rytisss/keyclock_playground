@@ -29,11 +29,11 @@ Then open http://localhost:5173.
 
 ## Try it
 
-1. Click **Login** → Keycloak login form → use `demo` / `demo123` (or `boss` / `boss123`).
+1. Click **Login** → Keycloak login form → use `researcher` / `researcher123` (or `admin` / `admin123`).
 2. After redirect back, you'll see decoded JWT claims.
 3. **GET /public** works without a token.
 4. **GET /protected** works for both users.
-5. **GET /admin** works only for `boss` (has `admin` realm role); `demo` gets 403.
+5. **GET /admin** works only for `admin` (has `admin` realm role); `researcher` gets 403.
 
 ## Security notes (for production)
 
