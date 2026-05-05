@@ -17,7 +17,7 @@ sequenceDiagram
     participant U as User
     participant SPA as SPA (browser)
     participant KC as Keycloak
-    participant API as Resource Server (Node API)
+    participant API as Resource Server (Python API)
 
     U->>SPA: Click "Login"
     SPA->>SPA: Generate code_verifier (random 43-128 chars)
@@ -46,9 +46,9 @@ Always use `S256`, never `plain`.
 ### Endpoints used
 
 ```
-authorize: http://localhost:8081/realms/playground/protocol/openid-connect/auth
-token:     http://localhost:8081/realms/playground/protocol/openid-connect/token
-logout:    http://localhost:8081/realms/playground/protocol/openid-connect/logout
+authorize: http://localhost:8081/realms/cvdlink/protocol/openid-connect/auth
+token:     http://localhost:8081/realms/cvdlink/protocol/openid-connect/token
+logout:    http://localhost:8081/realms/cvdlink/protocol/openid-connect/logout
 ```
 
 ### Working code
@@ -57,7 +57,7 @@ See [`examples/cvdlink-login-sample`](../examples/cvdlink-login-sample). It's ~1
 
 ### Walkthrough
 
-The screenshots below were captured against the local stack (`docker compose up -d`, sample on `:5173`, Node API on `:3001`). The realm has two demo users: `researcher`/`researcher123` with role `user`, and `admin`/`admin123` with roles `user` + `admin`.
+The screenshots below were captured against the local stack (`docker compose up -d`, sample on `:5173`, Python API on `:3001`). The realm has two demo users: `researcher`/`researcher123` with role `user`, and `admin`/`admin123` with roles `user` + `admin`.
 
 **1. Sample app before login** — no token in `sessionStorage`, the API panel is empty.
 
@@ -71,7 +71,7 @@ The screenshots below were captured against the local stack (`docker compose up 
 
 ![Decoded JWT after login](images/03-spa-post-login-claims.png)
 
-**4. `GET /protected` as `researcher` → 200** — the Node API verified the JWT against the realm's JWKS and returned the bearer's identity and roles.
+**4. `GET /protected` as `researcher` → 200** — the Python API verified the JWT against the realm's JWKS and returned the bearer's identity and roles.
 
 ![/protected returns 200 for researcher](images/04-spa-protected-200.png)
 
@@ -94,7 +94,7 @@ sequenceDiagram
     participant KC as Keycloak
     participant API as Other API
 
-    Svc->>KC: POST /token<br/>grant_type=client_credentials,<br/>client_id=node-api, client_secret=...
+    Svc->>KC: POST /token<br/>grant_type=client_credentials,<br/>client_id=python-api, client_secret=...
     KC->>Svc: { access_token (JWT), expires_in: 300 }
     Svc->>API: GET /resource<br/>Authorization: Bearer <access_token>
     API->>API: Verify JWT (JWKS, exp, iss, aud)
@@ -106,10 +106,10 @@ No user, no browser, no redirect. The service authenticates with its own credent
 ### Try it
 
 ```bash
-curl -X POST http://localhost:8081/realms/playground/protocol/openid-connect/token \
+curl -X POST http://localhost:8081/realms/cvdlink/protocol/openid-connect/token \
   -d "grant_type=client_credentials" \
-  -d "client_id=node-api" \
-  -d "client_secret=node-api-secret-change-me" | jq .
+  -d "client_id=python-api" \
+  -d "client_secret=python-api-secret-change-me" | jq .
 ```
 
 Output:
@@ -157,14 +157,14 @@ A Keycloak access token is a signed JWT: `header.payload.signature`, base64url-e
   "exp": 1735689600,
   "iat": 1735689300,
   "jti": "...",
-  "iss": "http://localhost:8081/realms/playground",
+  "iss": "http://localhost:8081/realms/cvdlink",
   "aud": "account",
   "sub": "8a7d...",
   "typ": "Bearer",
   "azp": "spa-client",
   "session_state": "...",
   "realm_access": {
-    "roles": ["user", "default-roles-playground", "offline_access"]
+    "roles": ["user", "default-roles-cvdlink", "offline_access"]
   },
   "resource_access": {
     "account": { "roles": ["manage-account", "view-profile"] }
@@ -185,11 +185,11 @@ A Keycloak access token is a signed JWT: `header.payload.signature`, base64url-e
 | `realm_access.roles` | Realm roles the user/service has. Use for authz.                 |
 | `sub`          | Stable user ID. Use this as your foreign key, not `preferred_username`.|
 
-> ⚠️ **`aud` gotcha:** by default Keycloak doesn't add your API's client ID to `aud`. If you want strict audience validation in the resource server, add an **Audience** mapper to the client scope. The Node API example sets `audience: false` to keep things simple — read the comments.
+> ⚠️ **`aud` gotcha:** by default Keycloak doesn't add your API's client ID to `aud`. If you want strict audience validation in the resource server, add an **Audience** mapper to the client scope. The Python API example passes `options={"verify_aud": False}` to `jwt.decode` to keep things simple — read the comments.
 
 ### Signature verification
 
-The resource server fetches **public keys** from `/realms/playground/protocol/openid-connect/certs` (JWKS) and verifies the signature. Keys rotate, so cache with a TTL and refresh on `kid` miss.
+The resource server fetches **public keys** from `/realms/cvdlink/protocol/openid-connect/certs` (JWKS) and verifies the signature. Keys rotate, so cache with a TTL and refresh on `kid` miss.
 
 ```mermaid
 flowchart LR
@@ -213,7 +213,7 @@ flowchart LR
 The token response includes a `refresh_token`. When `access_token` expires (default: 5 min), the client exchanges the refresh token for a new pair:
 
 ```bash
-curl -X POST http://localhost:8081/realms/playground/protocol/openid-connect/token \
+curl -X POST http://localhost:8081/realms/cvdlink/protocol/openid-connect/token \
   -d "grant_type=refresh_token" \
   -d "client_id=spa-client" \
   -d "refresh_token=$REFRESH_TOKEN"
@@ -230,7 +230,7 @@ For service-to-service (client credentials), don't use refresh tokens at all —
 Frontend logout = redirect the user to the `end_session_endpoint`:
 
 ```
-GET http://localhost:8081/realms/playground/protocol/openid-connect/logout
+GET http://localhost:8081/realms/cvdlink/protocol/openid-connect/logout
     ?client_id=spa-client
     &id_token_hint=<id_token>
     &post_logout_redirect_uri=http://localhost:5173/
@@ -242,4 +242,4 @@ This kills the Keycloak SSO session.
 
 ---
 
-**Next:** [`../examples/cvdlink-login-sample`](../examples/cvdlink-login-sample) and [`../examples/node-api`](../examples/node-api) — runnable code that implements everything above.
+**Next:** [`../examples/cvdlink-login-sample`](../examples/cvdlink-login-sample) and [`../examples/python-api`](../examples/python-api) — runnable code that implements everything above.
