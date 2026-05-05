@@ -99,7 +99,7 @@ The Authorization Code + PKCE flow, captured against this stack. The full walkth
 | Admin user         | `admin`      | `admin123`                   | `user`, `admin`  |
 | `python-api` secret  | —            | `python-api-secret-change-me`  | service account  |
 
-> ℹ️ The `admin`/`admin` row is the **master-realm** Keycloak superuser (admin console login). The `admin`/`admin123` row is a **playground-realm** user — different namespace, no conflict.
+> ℹ️ The `admin`/`admin` row is the **master-realm** Keycloak superuser (admin console login). The `admin`/`admin123` row is a **cvdlink-realm** user — different namespace, no conflict.
 
 > ⚠️ Defaults are for local play only. Do not deploy this stack as-is.
 
