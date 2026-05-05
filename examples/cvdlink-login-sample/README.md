@@ -8,19 +8,18 @@ Vanilla HTML + JS demonstrating the Authorization Code + PKCE flow against Keycl
 2. Redirects to Keycloak `/auth` with the challenge + a CSRF-protective `state`.
 3. On callback, validates `state`, then POSTs the auth code + `code_verifier` to `/token`.
 4. Stores the access token in `sessionStorage`, decodes its claims, displays them.
-5. Calls the Node API with `Authorization: Bearer <access_token>`.
+5. Calls the Python API with `Authorization: Bearer <access_token>`.
 6. Logout redirects to Keycloak's `end_session_endpoint`.
 
 ## Run
 
-Any static file server on port `5173` (matches the realm's redirect URI):
+A small FastAPI app serves the static files on port `5173` (matches the realm's redirect URI):
 
 ```bash
-# Python
-python3 -m http.server 5173
-
-# Or Node (one-liner)
-npx serve -p 5173 .
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn server:app --port 5173
 ```
 
 Then open http://localhost:5173.
