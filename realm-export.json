@@ -1,7 +1,7 @@
 {
-  "realm": "playground",
+  "realm": "cvdlink",
   "enabled": true,
-  "displayName": "Playground",
+  "displayName": "CVDLINK",
   "loginTheme": "cvdlink",
   "registrationAllowed": false,
   "loginWithEmailAllowed": true,
@@ -67,11 +67,11 @@
       }
     },
     {
-      "clientId": "node-api",
-      "name": "Node API (confidential, client credentials)",
+      "clientId": "python-api",
+      "name": "Python API (confidential, client credentials)",
       "enabled": true,
       "publicClient": false,
-      "secret": "node-api-secret-change-me",
+      "secret": "python-api-secret-change-me",
       "standardFlowEnabled": false,
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": true,
