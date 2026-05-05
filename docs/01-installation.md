@@ -58,25 +58,25 @@ Log in with the bootstrap admin credentials:
 
 > 📸 **Screenshot to capture:** the Keycloak admin login form at `localhost:8081/admin`.
 
-After login you land on the **master** realm. Switch to the imported `playground` realm via the realm dropdown in the top-left.
+After login you land on the **master** realm. Switch to the imported `cvdlink` realm via the realm dropdown in the top-left.
 
 ![Realm selector](images/02-realm-selector.png)
 
-> 📸 **Screenshot to capture:** the realm dropdown opened, showing both `master` and `playground`.
+> 📸 **Screenshot to capture:** the realm dropdown opened, showing both `master` and `cvdlink`.
 
 ---
 
 ## 1.3 Verify the imported realm
 
-In the `playground` realm, confirm the following resources exist:
+In the `cvdlink` realm, confirm the following resources exist:
 
-- **Clients** → `spa-client` (public, PKCE) and `node-api` (confidential, service account)
+- **Clients** → `spa-client` (public, PKCE) and `python-api` (confidential, service account)
 - **Realm roles** → `user`, `admin`
 - **Users** → `researcher` (role: user) and `admin` (roles: user + admin)
 
 ![Clients list](images/03-clients-list.png)
 
-> 📸 **Screenshot to capture:** Clients page showing `spa-client` and `node-api`.
+> 📸 **Screenshot to capture:** Clients page showing `spa-client` and `python-api`.
 
 ![Users list](images/04-users-list.png)
 
@@ -89,23 +89,23 @@ In the `playground` realm, confirm the following resources exist:
 Every Keycloak realm exposes its OIDC config at:
 
 ```
-http://localhost:8081/realms/playground/.well-known/openid-configuration
+http://localhost:8081/realms/cvdlink/.well-known/openid-configuration
 ```
 
 ```bash
-curl -s http://localhost:8081/realms/playground/.well-known/openid-configuration | jq .
+curl -s http://localhost:8081/realms/cvdlink/.well-known/openid-configuration | jq .
 ```
 
 Key endpoints to note (used by the examples):
 
 | Endpoint              | URL                                                                                |
 |-----------------------|------------------------------------------------------------------------------------|
-| `authorization`       | `http://localhost:8081/realms/playground/protocol/openid-connect/auth`             |
-| `token`               | `http://localhost:8081/realms/playground/protocol/openid-connect/token`            |
-| `userinfo`            | `http://localhost:8081/realms/playground/protocol/openid-connect/userinfo`         |
-| `jwks_uri`            | `http://localhost:8081/realms/playground/protocol/openid-connect/certs`            |
-| `end_session_endpoint`| `http://localhost:8081/realms/playground/protocol/openid-connect/logout`           |
-| `issuer`              | `http://localhost:8081/realms/playground`                                          |
+| `authorization`       | `http://localhost:8081/realms/cvdlink/protocol/openid-connect/auth`                |
+| `token`               | `http://localhost:8081/realms/cvdlink/protocol/openid-connect/token`               |
+| `userinfo`            | `http://localhost:8081/realms/cvdlink/protocol/openid-connect/userinfo`            |
+| `jwks_uri`            | `http://localhost:8081/realms/cvdlink/protocol/openid-connect/certs`               |
+| `end_session_endpoint`| `http://localhost:8081/realms/cvdlink/protocol/openid-connect/logout`              |
+| `issuer`              | `http://localhost:8081/realms/cvdlink`                                             |
 
 ---
 
