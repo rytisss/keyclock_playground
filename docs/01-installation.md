@@ -56,13 +56,9 @@ Log in with the bootstrap admin credentials:
 
 ![Admin login screen](images/01-admin-login.png)
 
-> 📸 **Screenshot to capture:** the Keycloak admin login form at `localhost:8081/admin`.
-
 After login you land on the **master** realm. Switch to the imported `cvdlink` realm via the realm dropdown in the top-left.
 
 ![Realm selector](images/02-realm-selector.png)
-
-> 📸 **Screenshot to capture:** the realm dropdown opened, showing both `master` and `cvdlink`.
 
 ---
 
@@ -76,11 +72,7 @@ In the `cvdlink` realm, confirm the following resources exist:
 
 ![Clients list](images/03-clients-list.png)
 
-> 📸 **Screenshot to capture:** Clients page showing `spa-client` and `python-api`.
-
 ![Users list](images/04-users-list.png)
-
-> 📸 **Screenshot to capture:** Users page showing `researcher` and `admin`.
 
 ---
 
