@@ -20,8 +20,8 @@ A self-contained Keycloak playground: spin up Keycloak with one command, then wa
 - **Auto-imported realm** ([`realm-export.json`](realm-export.json)) with clients, roles, and demo users
 - **Custom login theme** ([`themes/cvdlink/`](themes/cvdlink/login/)) replacing the realm-name banner with the CVDLINK logo
 - **Two runnable examples** that talk to it:
-  - [`examples/cvdlink-login-sample`](examples/cvdlink-login-sample/) — vanilla JS Authorization Code + PKCE flow
-  - [`examples/node-api`](examples/node-api/) — Express resource server validating JWTs via JWKS
+  - [`examples/cvdlink-login-sample`](examples/cvdlink-login-sample/) — vanilla JS Authorization Code + PKCE flow, served by FastAPI
+  - [`examples/python-api`](examples/python-api/) — FastAPI resource server validating JWTs via JWKS
 - **Step-by-step docs** with Mermaid sequence diagrams and captured screenshots
 
 ## Quickstart
@@ -34,11 +34,17 @@ docker compose up -d
 #    http://localhost:8081/admin   (admin / admin)
 
 # 3. run the API
-cd examples/node-api && cp .env.example .env && npm install && npm start
+cd examples/python-api
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt && cp .env.example .env
+uvicorn server:app --port 3001
 #    listening on :3001
 
 # 4. in another terminal, serve the CVDLINK Login Sample
-cd examples/cvdlink-login-sample && python3 -m http.server 5173
+cd examples/cvdlink-login-sample
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn server:app --port 5173
 #    open http://localhost:5173 → click Login → researcher / researcher123
 ```
 
@@ -71,8 +77,8 @@ The Authorization Code + PKCE flow, captured against this stack. The full walkth
 │   ├── 03-oidc-flow.md              # Auth Code+PKCE, Client Credentials, JWT internals
 │   └── images/                      # screenshots referenced from the docs
 └── examples/
-    ├── cvdlink-login-sample/        # vanilla JS PKCE login flow
-    └── node-api/                    # Express + jose JWT validation
+    ├── cvdlink-login-sample/        # vanilla JS PKCE login flow, FastAPI static server
+    └── python-api/                  # FastAPI + PyJWT JWT validation
 ```
 
 ## Auth flows covered
@@ -91,7 +97,7 @@ The Authorization Code + PKCE flow, captured against this stack. The full walkth
 | Keycloak admin     | `admin`      | `admin`                      | (master realm)   |
 | Researcher user    | `researcher` | `researcher123`              | `user`           |
 | Admin user         | `admin`      | `admin123`                   | `user`, `admin`  |
-| `node-api` secret  | —            | `node-api-secret-change-me`  | service account  |
+| `python-api` secret  | —            | `python-api-secret-change-me`  | service account  |
 
 > ℹ️ The `admin`/`admin` row is the **master-realm** Keycloak superuser (admin console login). The `admin`/`admin123` row is a **playground-realm** user — different namespace, no conflict.
 
@@ -136,7 +142,7 @@ Out of the box, Keycloak 26's default `keycloak.v2` login theme renders the real
 1. [`docs/01-installation.md`](docs/01-installation.md) — Docker, first admin login, OIDC discovery doc
 2. [`docs/02-realm-setup.md`](docs/02-realm-setup.md) — manual realm/client/user setup (skip if you used the import)
 3. [`docs/03-oidc-flow.md`](docs/03-oidc-flow.md) — auth flows + JWT structure
-4. [`examples/node-api/README.md`](examples/node-api/README.md) — resource server walkthrough
+4. [`examples/python-api/README.md`](examples/python-api/README.md) — resource server walkthrough
 5. [`examples/cvdlink-login-sample/README.md`](examples/cvdlink-login-sample/README.md) — CVDLINK Login Sample walkthrough
 
 ## License
