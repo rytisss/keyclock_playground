@@ -5,6 +5,8 @@ import uvicorn
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from jwt import PyJWKClient
 
 load_dotenv()
@@ -54,6 +56,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request, exc):
+    body = exc.detail if isinstance(exc.detail, dict) else {"detail": exc.detail}
+    return JSONResponse(status_code=exc.status_code, content=body)
 
 
 @app.get("/public")
