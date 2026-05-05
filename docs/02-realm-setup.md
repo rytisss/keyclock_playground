@@ -9,7 +9,7 @@ The repo's `realm-export.json` configures everything below automatically. This p
 ## 2.1 Create the realm
 
 1. Top-left realm dropdown → **Create realm**.
-2. **Realm name:** `playground`. Leave the rest at defaults.
+2. **Realm name:** `cvdlink`. **Display name:** `CVDLINK`. Leave the rest at defaults.
 3. **Create**.
 
 ![Create realm dialog](images/10-create-realm.png)
@@ -70,7 +70,7 @@ This client represents a backend service that needs to obtain its own tokens (e.
 
 1. **Clients** → **Create client**.
 2. **General settings:**
-   - Client ID: `node-api`
+   - Client ID: `python-api`
    - **Next**
 3. **Capability config:**
    - Client authentication: **ON** (confidential)
@@ -78,11 +78,11 @@ This client represents a backend service that needs to obtain its own tokens (e.
    - **Next**
 4. **Login settings:** leave blank → **Save**.
 
-![Node API capability config](images/14-api-capability.png)
+![Python API capability config](images/14-api-capability.png)
 
-> 📸 **Screenshot to capture:** the Node API client's Capability config tab.
+> 📸 **Screenshot to capture:** the Python API client's Capability config tab.
 
-5. After save → **Credentials** tab → copy the **Client secret**. You'll paste it into the Node API's `.env`.
+5. After save → **Credentials** tab → copy the **Client secret**. You'll paste it into the Python API's `.env`.
 
 ![Client credentials tab](images/15-client-secret.png)
 
@@ -111,7 +111,7 @@ Keycloak puts realm roles inside `realm_access.roles` in the token by default. I
 1. **Client scopes** → `roles` → **Mappers** → existing `realm roles` mapper.
 2. Toggle **Add to access token** = ON (default), and optionally rename the **Token claim name**.
 
-For most apps, the default `realm_access.roles` is fine — your resource server reads it directly (see Node API example).
+For most apps, the default `realm_access.roles` is fine — your resource server reads it directly (see Python API example).
 
 ---
 
@@ -120,7 +120,7 @@ For most apps, the default `realm_access.roles` is fine — your resource server
 With the realm fully configured, request a token via the password grant **for testing only** (we disabled it in the import; enable it temporarily if you want to try this):
 
 ```bash
-curl -X POST http://localhost:8081/realms/playground/protocol/openid-connect/token \
+curl -X POST http://localhost:8081/realms/cvdlink/protocol/openid-connect/token \
   -d "grant_type=password" \
   -d "client_id=spa-client" \
   -d "username=researcher" \
