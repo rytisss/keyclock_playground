@@ -28,14 +28,14 @@ These are the roles your app's authorization will check against.
 
 ---
 
-## 2.3 Create the SPA client (public, PKCE)
+## 2.3 Create the public OIDC client (PKCE)
 
 This client represents your browser-based frontend. Public clients **must** use PKCE — they cannot keep a secret safely.
 
 1. **Clients** → **Create client**.
 2. **General settings:**
    - Client type: `OpenID Connect`
-   - Client ID: `spa-client`
+   - Client ID: `cvdlink-user`
    - **Next**
 3. **Capability config:**
    - Client authentication: **OFF** (public client)
@@ -46,7 +46,7 @@ This client represents your browser-based frontend. Public clients **must** use 
    - Web origins: `http://localhost:5173`
    - **Save**
 
-![SPA client capability config](images/12-spa-capability.png)
+![cvdlink-user client capability config](images/12-cvdlink-user-capability.png)
 
 5. After save, open the client → **Advanced** tab → **Proof Key for Code Exchange Code Challenge Method** → set to `S256`.
 
@@ -108,7 +108,7 @@ With the realm fully configured, request a token via the password grant **for te
 ```bash
 curl -X POST http://localhost:8081/realms/cvdlink/protocol/openid-connect/token \
   -d "grant_type=password" \
-  -d "client_id=spa-client" \
+  -d "client_id=cvdlink-user" \
   -d "username=researcher" \
   -d "password=researcher123" | jq .
 ```

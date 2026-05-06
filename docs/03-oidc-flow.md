@@ -2,7 +2,7 @@
 
 Two flows are covered:
 
-- **Authorization Code + PKCE** — for any user-facing app (SPA, mobile, native, server-rendered web).
+- **Authorization Code + PKCE** — for any user-facing app (browser, mobile, native, server-rendered web).
 - **Client Credentials** — for service-to-service (no user involved).
 
 This page explains both, shows the wire-level requests, and decodes a real JWT.
@@ -15,24 +15,24 @@ This page explains both, shows the wire-level requests, and decodes a real JWT.
 sequenceDiagram
     autonumber
     participant U as User
-    participant SPA as SPA (browser)
+    participant App as App (browser)
     participant KC as Keycloak
     participant API as Resource Server (Python API)
 
-    U->>SPA: Click "Login"
-    SPA->>SPA: Generate code_verifier (random 43-128 chars)
-    SPA->>SPA: code_challenge = SHA256(code_verifier), base64url
-    SPA->>KC: 302 → /auth?response_type=code&client_id=spa-client&<br/>redirect_uri=...&code_challenge=...&code_challenge_method=S256&state=...
+    U->>App: Click "Login"
+    App->>App: Generate code_verifier (random 43-128 chars)
+    App->>App: code_challenge = SHA256(code_verifier), base64url
+    App->>KC: 302 → /auth?response_type=code&client_id=cvdlink-user&<br/>redirect_uri=...&code_challenge=...&code_challenge_method=S256&state=...
     KC->>U: Login form
     U->>KC: username + password
-    KC->>SPA: 302 → redirect_uri?code=AUTH_CODE&state=...
-    SPA->>KC: POST /token<br/>grant_type=authorization_code, code=AUTH_CODE,<br/>code_verifier=..., client_id=spa-client, redirect_uri=...
+    KC->>App: 302 → redirect_uri?code=AUTH_CODE&state=...
+    App->>KC: POST /token<br/>grant_type=authorization_code, code=AUTH_CODE,<br/>code_verifier=..., client_id=cvdlink-user, redirect_uri=...
     KC->>KC: Verify SHA256(code_verifier) == code_challenge
-    KC->>SPA: { access_token (JWT), id_token (JWT), refresh_token, expires_in }
-    SPA->>API: GET /protected<br/>Authorization: Bearer <access_token>
+    KC->>App: { access_token (JWT), id_token (JWT), refresh_token, expires_in }
+    App->>API: GET /protected<br/>Authorization: Bearer <access_token>
     API->>KC: GET /certs (cached, JWKS)
     API->>API: Verify JWT signature, exp, iss, aud
-    API->>SPA: 200 { ... }
+    API->>App: 200 { ... }
 ```
 
 ### Why PKCE?
@@ -53,7 +53,7 @@ logout:    http://localhost:8081/realms/cvdlink/protocol/openid-connect/logout
 
 ### Working code
 
-See [`examples/cvdlink-login-sample`](../examples/cvdlink-login-sample). It's ~150 lines of vanilla JS — no library — so you can read every step.
+See [`examples/cvdlink-login-sample`](../examples/cvdlink-login-sample). It's ~150 lines so you can read every step.
 
 ### Walkthrough
 
@@ -61,27 +61,27 @@ The screenshots below were captured against the local stack (`docker compose up 
 
 **1. Sample app before login** — no token in `sessionStorage`, the API panel is empty.
 
-![Login sample pre-login](images/01-spa-pre-login.png)
+![Login sample pre-login](images/01-app-pre-login.png)
 
 **2. Keycloak login form** — clicking *Login* redirects to the realm's `/auth` endpoint with `code_challenge` + `state` in the query string. The login page uses the custom `cvdlink` theme that swaps the realm-name banner for the CVDLINK logo.
 
 ![Keycloak login form](images/02-keycloak-login.png)
 
-**3. Post-login: decoded access token** — after the redirect back, the sample app exchanged the code (with `code_verifier`) for tokens and decoded the JWT. Note `iss`, `azp=spa-client`, `realm_access.roles=["user"]`.
+**3. Post-login: decoded access token** — after the redirect back, the sample app exchanged the code (with `code_verifier`) for tokens and decoded the JWT. Note `iss`, `azp=cvdlink-user`, `realm_access.roles=["user"]`.
 
-![Decoded JWT after login](images/03-spa-post-login-claims.png)
+![Decoded JWT after login](images/03-app-post-login-claims.png)
 
 **4. `GET /protected` as `researcher` → 200** — the Python API verified the JWT against the realm's JWKS and returned the bearer's identity and roles.
 
-![/protected returns 200 for researcher](images/04-spa-protected-200.png)
+![/protected returns 200 for researcher](images/04-app-protected-200.png)
 
 **5. `GET /admin` as `researcher` → 403** — `requireRole("admin")` rejected the request because the token's `realm_access.roles` does not include `admin`.
 
-![/admin returns 403 for researcher](images/05-spa-admin-403-researcher.png)
+![/admin returns 403 for researcher](images/05-app-admin-403-researcher.png)
 
 **6. `GET /admin` as `admin` → 200** — after logging out and back in as `admin`, the same endpoint succeeds because the new token carries the `admin` realm role.
 
-![/admin returns 200 for admin](images/06-spa-admin-200-admin.png)
+![/admin returns 200 for admin](images/06-app-admin-200-admin.png)
 
 ---
 
@@ -161,7 +161,7 @@ A Keycloak access token is a signed JWT: `header.payload.signature`, base64url-e
   "aud": "account",
   "sub": "8a7d...",
   "typ": "Bearer",
-  "azp": "spa-client",
+  "azp": "cvdlink-user",
   "session_state": "...",
   "realm_access": {
     "roles": ["user", "default-roles-cvdlink", "offline_access"]
@@ -215,11 +215,11 @@ The token response includes a `refresh_token`. When `access_token` expires (defa
 ```bash
 curl -X POST http://localhost:8081/realms/cvdlink/protocol/openid-connect/token \
   -d "grant_type=refresh_token" \
-  -d "client_id=spa-client" \
+  -d "client_id=cvdlink-user" \
   -d "refresh_token=$REFRESH_TOKEN"
 ```
 
-For SPAs, refresh tokens live in memory (or `httpOnly` cookies via a BFF). **Never** put them in `localStorage` if you can avoid it — XSS would exfiltrate them.
+For browser apps, refresh tokens live in memory (or `httpOnly` cookies via a BFF). **Never** put them in `localStorage` if you can avoid it — XSS would exfiltrate them.
 
 For service-to-service (client credentials), don't use refresh tokens at all — just request a new token when you need one. Keycloak doesn't issue refresh tokens for client credentials by default.
 
@@ -231,7 +231,7 @@ Frontend logout = redirect the user to the `end_session_endpoint`:
 
 ```
 GET http://localhost:8081/realms/cvdlink/protocol/openid-connect/logout
-    ?client_id=spa-client
+    ?client_id=cvdlink-user
     &id_token_hint=<id_token>
     &post_logout_redirect_uri=http://localhost:5173/
 ```

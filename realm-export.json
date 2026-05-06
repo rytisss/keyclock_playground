@@ -46,8 +46,8 @@
   ],
   "clients": [
     {
-      "clientId": "spa-client",
-      "name": "SPA Client (public, PKCE)",
+      "clientId": "cvdlink-user",
+      "name": "CVDLINK User (public, PKCE)",
       "enabled": true,
       "publicClient": true,
       "standardFlowEnabled": true,
