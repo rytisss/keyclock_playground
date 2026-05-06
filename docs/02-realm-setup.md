@@ -14,8 +14,6 @@ The repo's `realm-export.json` configures everything below automatically. This p
 
 ![Create realm dialog](images/10-create-realm.png)
 
-> 📸 **Screenshot to capture:** the "Create realm" form filled in.
-
 ---
 
 ## 2.2 Create realm roles
@@ -27,8 +25,6 @@ These are the roles your app's authorization will check against.
 3. Repeat for `admin`.
 
 ![Realm roles list](images/11-realm-roles.png)
-
-> 📸 **Screenshot to capture:** Realm roles page showing both `user` and `admin`.
 
 ---
 
@@ -52,13 +48,9 @@ This client represents your browser-based frontend. Public clients **must** use 
 
 ![SPA client capability config](images/12-spa-capability.png)
 
-> 📸 **Screenshot to capture:** the SPA client's Capability config tab.
-
 5. After save, open the client → **Advanced** tab → **Proof Key for Code Exchange Code Challenge Method** → set to `S256`.
 
 ![PKCE S256 setting](images/13-pkce-s256.png)
-
-> 📸 **Screenshot to capture:** Advanced tab showing PKCE = `S256`.
 
 > ⚠️ **Why PKCE?** Without it, an attacker who intercepts the auth code can exchange it for tokens. PKCE binds the auth code to the client instance via a one-time `code_verifier`. Always `S256`, never `plain`.
 
@@ -80,13 +72,9 @@ This client represents a backend service that needs to obtain its own tokens (e.
 
 ![Python API capability config](images/14-api-capability.png)
 
-> 📸 **Screenshot to capture:** the Python API client's Capability config tab.
-
 5. After save → **Credentials** tab → copy the **Client secret**. You'll paste it into the Python API's `.env`.
 
 ![Client credentials tab](images/15-client-secret.png)
-
-> 📸 **Screenshot to capture:** Credentials tab showing the secret (blur the value before publishing).
 
 ---
 
@@ -99,8 +87,6 @@ This client represents a backend service that needs to obtain its own tokens (e.
 5. Repeat for `admin` (password `admin123`) with both `user` and `admin` roles.
 
 ![User role mapping](images/16-user-roles.png)
-
-> 📸 **Screenshot to capture:** the `admin` user's Role mapping showing both roles assigned.
 
 ---
 
