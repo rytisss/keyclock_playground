@@ -32,7 +32,7 @@ Then open http://localhost:5173.
 2. After redirect back, you'll see decoded JWT claims.
 3. **GET /public** works without a token.
 4. **GET /protected** works for both users.
-5. **GET /admin** works only for `admin` (has `admin` realm role); `researcher` gets 403.
+5. **GET /admin** works only for `admin` (who holds `cvdlink-admin` along with the other three CVDLINK roles); `researcher` gets 403.
 
 ## Security notes (for production)
 
