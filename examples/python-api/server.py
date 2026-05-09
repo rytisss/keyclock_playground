@@ -80,7 +80,7 @@ def protected(user: dict = Depends(require_auth)):
 
 
 @app.get("/admin")
-def admin(user: dict = Depends(require_role("admin"))):
+def admin(user: dict = Depends(require_role("cvdlink-admin"))):
     return {
         "message": "you are an admin",
         "user": user.get("preferred_username"),

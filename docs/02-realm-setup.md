@@ -18,11 +18,21 @@ The repo's `realm-export.json` configures everything below automatically. This p
 
 ## 2.2 Create realm roles
 
-These are the roles your app's authorization will check against.
+These are the roles your app's authorization will check against. The CVDLINK
+realm uses four roles — the **role name** (slug) is what shows up in
+`realm_access.roles` inside the JWT, and the **description** is what the admin
+console renders next to it.
+
+| Role name (slug)                  | Description                                |
+|-----------------------------------|--------------------------------------------|
+| `cvdlink-healthcare-professional` | CVDLINK Healthcare Professional            |
+| `cvdlink-researcher`              | CVDLINK Researcher                         |
+| `cvdlink-resource-manager`        | CVDLINK Resource Manager (Systemic Role)   |
+| `cvdlink-admin`                   | CVDLINK Admin                              |
 
 1. Left nav → **Realm roles** → **Create role**.
-2. Add `user` (role name) → **Save**.
-3. Repeat for `admin`.
+2. Fill **Role name** with the slug and **Description** with the human-readable name → **Save**.
+3. Repeat for the other three roles.
 
 ![Realm roles list](images/11-realm-roles.png)
 
@@ -83,8 +93,10 @@ This client represents a backend service that needs to obtain its own tokens (e.
 1. **Users** → **Add user**.
 2. Username: `researcher`, Email: `researcher@example.com`, Email verified: **ON** → **Create**.
 3. On the user's page → **Credentials** tab → **Set password** → `researcher123`, Temporary: **OFF** → **Save**.
-4. **Role mapping** tab → **Assign role** → filter by realm roles → check `user` → **Assign**.
-5. Repeat for `admin` (password `admin123`) with both `user` and `admin` roles.
+4. **Role mapping** tab → **Assign role** → filter by realm roles → check `cvdlink-researcher` → **Assign**.
+5. Repeat for `admin` (password `admin123`) and assign **all four** CVDLINK roles
+   (`cvdlink-healthcare-professional`, `cvdlink-researcher`, `cvdlink-resource-manager`,
+   `cvdlink-admin`) — this is the multi-role demo user used by the `/admin` walkthrough.
 
 ![User role mapping](images/16-user-roles.png)
 

@@ -57,7 +57,7 @@ See [`examples/cvdlink-login-sample`](../examples/cvdlink-login-sample). It's ~1
 
 ### Walkthrough
 
-The screenshots below were captured against the local stack (`docker compose up -d`, sample on `:5173`, Python API on `:3001`). The realm has two demo users: `researcher`/`researcher123` with role `user`, and `admin`/`admin123` with roles `user` + `admin`.
+The screenshots below were captured against the local stack (`docker compose up -d`, sample on `:5173`, Python API on `:3001`). The realm has two demo users: `researcher`/`researcher123` with role `cvdlink-researcher`, and `admin`/`admin123` with all four CVDLINK roles (`cvdlink-healthcare-professional`, `cvdlink-researcher`, `cvdlink-resource-manager`, `cvdlink-admin`).
 
 **1. Sample app before login** — no token in `sessionStorage`, the API panel is empty.
 
@@ -67,7 +67,7 @@ The screenshots below were captured against the local stack (`docker compose up 
 
 ![Keycloak login form](images/02-keycloak-login.png)
 
-**3. Post-login: decoded access token** — after the redirect back, the sample app exchanged the code (with `code_verifier`) for tokens and decoded the JWT. Note `iss`, `azp=cvdlink-user`, `realm_access.roles=["user"]`.
+**3. Post-login: decoded access token** — after the redirect back, the sample app exchanged the code (with `code_verifier`) for tokens and decoded the JWT. Note `iss`, `azp=cvdlink-user`, and `realm_access.roles` carrying the CVDLINK role(s) assigned to the user.
 
 ![Decoded JWT after login](images/03-app-post-login-claims.png)
 
@@ -75,11 +75,11 @@ The screenshots below were captured against the local stack (`docker compose up 
 
 ![/protected returns 200 for researcher](images/04-app-protected-200.png)
 
-**5. `GET /admin` as `researcher` → 403** — `requireRole("admin")` rejected the request because the token's `realm_access.roles` does not include `admin`.
+**5. `GET /admin` as `researcher` → 403** — `require_role("cvdlink-admin")` rejected the request because the token's `realm_access.roles` does not include `cvdlink-admin` (only `cvdlink-researcher`).
 
 ![/admin returns 403 for researcher](images/05-app-admin-403-researcher.png)
 
-**6. `GET /admin` as `admin` → 200** — after logging out and back in as `admin`, the same endpoint succeeds because the new token carries the `admin` realm role.
+**6. `GET /admin` as `admin` → 200** — after logging out and back in as `admin`, the same endpoint succeeds because the new token carries `cvdlink-admin` (along with the other three CVDLINK roles).
 
 ![/admin returns 200 for admin](images/06-app-admin-200-admin.png)
 

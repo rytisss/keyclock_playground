@@ -4,11 +4,11 @@ Minimal FastAPI service that verifies Keycloak-issued JWTs against the realm's J
 
 ## Routes
 
-| Path         | Auth                | Returns                                |
-|--------------|---------------------|----------------------------------------|
-| `/public`    | none                | open to everyone                       |
-| `/protected` | valid JWT           | user info from token                   |
-| `/admin`     | JWT + `admin` role  | admin-only payload, otherwise 403      |
+| Path         | Auth                          | Returns                                |
+|--------------|-------------------------------|----------------------------------------|
+| `/public`    | none                          | open to everyone                       |
+| `/protected` | valid JWT                     | user info from token                   |
+| `/admin`     | JWT + `cvdlink-admin` role    | admin-only payload, otherwise 403      |
 
 ## Run
 
@@ -38,10 +38,10 @@ TOKEN=$(curl -s -X POST http://localhost:8081/realms/cvdlink/protocol/openid-con
 ```bash
 curl http://localhost:3001/public
 curl -H "Authorization: Bearer $TOKEN" http://localhost:3001/protected
-curl -H "Authorization: Bearer $TOKEN" http://localhost:3001/admin   # 403 — service account has no admin role
+curl -H "Authorization: Bearer $TOKEN" http://localhost:3001/admin   # 403 — service account has no cvdlink-admin role
 ```
 
-To hit `/admin`, get a token for the `admin` user via the CVDLINK Login Sample (Auth Code + PKCE).
+To hit `/admin`, get a token for the `admin` user (who holds `cvdlink-admin`) via the CVDLINK Login Sample (Auth Code + PKCE).
 
 ## How it validates tokens
 

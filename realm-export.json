@@ -14,8 +14,10 @@
   "ssoSessionMaxLifespan": 36000,
   "roles": {
     "realm": [
-      { "name": "user", "description": "Regular authenticated user" },
-      { "name": "admin", "description": "Administrative user" }
+      { "name": "cvdlink-healthcare-professional", "description": "CVDLINK Healthcare Professional" },
+      { "name": "cvdlink-researcher",              "description": "CVDLINK Researcher" },
+      { "name": "cvdlink-resource-manager",        "description": "CVDLINK Resource Manager (Systemic Role)" },
+      { "name": "cvdlink-admin",                   "description": "CVDLINK Admin" }
     ]
   },
   "users": [
@@ -29,7 +31,7 @@
       "credentials": [
         { "type": "password", "value": "researcher123", "temporary": false }
       ],
-      "realmRoles": ["user"]
+      "realmRoles": ["cvdlink-researcher"]
     },
     {
       "username": "admin",
@@ -41,7 +43,12 @@
       "credentials": [
         { "type": "password", "value": "admin123", "temporary": false }
       ],
-      "realmRoles": ["user", "admin"]
+      "realmRoles": [
+        "cvdlink-healthcare-professional",
+        "cvdlink-researcher",
+        "cvdlink-resource-manager",
+        "cvdlink-admin"
+      ]
     }
   ],
   "clients": [

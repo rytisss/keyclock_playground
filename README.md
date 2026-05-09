@@ -59,8 +59,8 @@ The Authorization Code + PKCE flow, captured against this stack. The full walkth
 | Keycloak login page (CVDLINK theme) | ![Keycloak login form](docs/images/02-keycloak-login.png) |
 | Sample app after login: decoded access token | ![Decoded JWT](docs/images/03-app-post-login-claims.png) |
 | `GET /protected` as `researcher` → 200 | ![/protected 200](docs/images/04-app-protected-200.png) |
-| `GET /admin` as `researcher` → 403 | ![/admin 403](docs/images/05-app-admin-403-researcher.png) |
-| `GET /admin` as `admin` → 200 | ![/admin 200](docs/images/06-app-admin-200-admin.png) |
+| `GET /admin` as `researcher` (no `cvdlink-admin` role) → 403 | ![/admin 403](docs/images/05-app-admin-403-researcher.png) |
+| `GET /admin` as `admin` (holds all four CVDLINK roles) → 200 | ![/admin 200](docs/images/06-app-admin-200-admin.png) |
 
 ## Repo layout
 
@@ -92,12 +92,21 @@ The Authorization Code + PKCE flow, captured against this stack. The full walkth
 
 ## Default credentials
 
-| Who                | Username     | Password                     | Roles            |
-|--------------------|--------------|------------------------------|------------------|
-| Keycloak admin     | `admin`      | `admin`                      | (master realm)   |
-| Researcher user    | `researcher` | `researcher123`              | `user`           |
-| Admin user         | `admin`      | `admin123`                   | `user`, `admin`  |
-| `python-api` secret  | —            | `python-api-secret-change-me`  | service account  |
+| Who                  | Username     | Password                       | Realm roles                                                                                     |
+|----------------------|--------------|--------------------------------|-------------------------------------------------------------------------------------------------|
+| Keycloak admin       | `admin`      | `admin`                        | (master realm)                                                                                  |
+| Researcher user      | `researcher` | `researcher123`                | `cvdlink-researcher`                                                                            |
+| Admin user           | `admin`      | `admin123`                     | `cvdlink-healthcare-professional`, `cvdlink-researcher`, `cvdlink-resource-manager`, `cvdlink-admin` |
+| `python-api` secret  | —            | `python-api-secret-change-me`  | service account                                                                                 |
+
+The four CVDLINK realm roles are:
+
+| Slug                              | Description                                |
+|-----------------------------------|--------------------------------------------|
+| `cvdlink-healthcare-professional` | CVDLINK Healthcare Professional            |
+| `cvdlink-researcher`              | CVDLINK Researcher                         |
+| `cvdlink-resource-manager`        | CVDLINK Resource Manager (Systemic Role)   |
+| `cvdlink-admin`                   | CVDLINK Admin                              |
 
 > ℹ️ The `admin`/`admin` row is the **master-realm** Keycloak superuser (admin console login). The `admin`/`admin123` row is a **cvdlink-realm** user — different namespace, no conflict.
 
