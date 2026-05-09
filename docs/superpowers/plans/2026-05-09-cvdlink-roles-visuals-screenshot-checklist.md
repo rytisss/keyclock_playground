@@ -6,7 +6,7 @@ The branch is already running locally:
 - Sample app:     <http://localhost:5173/>
 - Python API:     <http://localhost:3001/>
 
-Six PNG files need to be re-captured. Filenames stay the same (so doc links don't
+Seven PNG files need to be re-captured. Filenames stay the same (so doc links don't
 break) — overwrite the files at `docs/images/<name>.png`.
 
 The exact size/aspect of the existing PNGs should be preserved where possible
@@ -20,11 +20,12 @@ The exact size/aspect of the existing PNGs should be preserved where possible
 | 4 | `docs/images/03-app-post-login-claims.png` | Sample app → **Login** → log in as `admin` / `admin123` | The decoded JWT panel with `realm_access.roles` containing all four CVDLINK role slugs. (Logging in as `admin` instead of `researcher` makes the role list more interesting.) |
 | 5 | `docs/images/05-app-admin-403-researcher.png` | Sample app while logged in as `researcher` / `researcher123` → click **GET /admin** | API panel showing `status: 403` and body `{ "error": "requires role: cvdlink-admin" }`. |
 | 6 | `docs/images/06-app-admin-200-admin.png` | Sample app while logged in as `admin` / `admin123` → click **GET /admin** | API panel showing `status: 200` and body `{ "message": "you are an admin", "user": "admin" }`. |
+| 7 | `docs/images/04-app-protected-200.png` | Sample app while logged in as `researcher` (or `admin`) → click **GET /protected** | **Full-page** capture (not just viewport). Existing PNG cuts off mid-token and the API response panel is only partly visible — this one needs to be a long/scrolling screenshot that shows the entire page from header through the complete `/protected` 200 response body. In Chrome/Edge: DevTools → Cmd/Ctrl-Shift-P → "Capture full size screenshot". |
 
 ## Recommended order
 
 1. Take #4 (admin login → JWT claims) and #6 (admin → /admin → 200) in the same admin session.
-2. Logout, log in as `researcher`, take #5 (researcher → /admin → 403).
+2. Logout, log in as `researcher`, take #5 (researcher → /admin → 403) and #7 (researcher → /protected → 200, full-page).
 3. Open admin console, take #1, #2, #3.
 
 ## After capture
@@ -32,7 +33,8 @@ The exact size/aspect of the existing PNGs should be preserved where possible
 ```powershell
 git add docs/images/11-realm-roles.png docs/images/16-user-roles.png `
         docs/images/04-users-list.png docs/images/03-app-post-login-claims.png `
-        docs/images/05-app-admin-403-researcher.png docs/images/06-app-admin-200-admin.png
+        docs/images/05-app-admin-403-researcher.png docs/images/06-app-admin-200-admin.png `
+        docs/images/04-app-protected-200.png
 git commit -m "docs: re-capture screenshots for cvdlink roles"
 ```
 
