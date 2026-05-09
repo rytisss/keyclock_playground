@@ -66,7 +66,7 @@ After login you land on the **master** realm. Switch to the imported `cvdlink` r
 
 In the `cvdlink` realm, confirm the following resources exist:
 
-- **Clients** → `spa-client` (public, PKCE) and `python-api` (confidential, service account)
+- **Clients** → `cvdlink-user` (public, PKCE) and `python-api` (confidential, service account)
 - **Realm roles** → `user`, `admin`
 - **Users** → `researcher` (role: user) and `admin` (roles: user + admin)
 

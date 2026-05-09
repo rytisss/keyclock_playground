@@ -1,6 +1,6 @@
 # CVDLINK Login Sample — Auth Code + PKCE
 
-Vanilla HTML + JS demonstrating the Authorization Code + PKCE flow against Keycloak. No framework, no library — every step is in `app.js`.
+HTML + JS demonstrating the Authorization Code + PKCE flow against Keycloak — every step is in `app.js`.
 
 ## What it does
 

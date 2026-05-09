@@ -20,7 +20,7 @@ A self-contained Keycloak playground: spin up Keycloak with one command, then wa
 - **Auto-imported realm** ([`realm-export.json`](realm-export.json)) with clients, roles, and demo users
 - **Custom login theme** ([`themes/cvdlink/`](themes/cvdlink/login/)) replacing the realm-name banner with the CVDLINK logo
 - **Two runnable examples** that talk to it:
-  - [`examples/cvdlink-login-sample`](examples/cvdlink-login-sample/) — vanilla JS Authorization Code + PKCE flow, served by FastAPI
+  - [`examples/cvdlink-login-sample`](examples/cvdlink-login-sample/) — Authorization Code + PKCE flow, served by FastAPI
   - [`examples/python-api`](examples/python-api/) — FastAPI resource server validating JWTs via JWKS
 - **Step-by-step docs** with Mermaid sequence diagrams and captured screenshots
 
@@ -57,10 +57,10 @@ The Authorization Code + PKCE flow, captured against this stack. The full walkth
 | Step | Screenshot |
 |------|------------|
 | Keycloak login page (CVDLINK theme) | ![Keycloak login form](docs/images/02-keycloak-login.png) |
-| Sample app after login: decoded access token | ![Decoded JWT](docs/images/03-spa-post-login-claims.png) |
-| `GET /protected` as `researcher` → 200 | ![/protected 200](docs/images/04-spa-protected-200.png) |
-| `GET /admin` as `researcher` → 403 | ![/admin 403](docs/images/05-spa-admin-403-researcher.png) |
-| `GET /admin` as `admin` → 200 | ![/admin 200](docs/images/06-spa-admin-200-admin.png) |
+| Sample app after login: decoded access token | ![Decoded JWT](docs/images/03-app-post-login-claims.png) |
+| `GET /protected` as `researcher` → 200 | ![/protected 200](docs/images/04-app-protected-200.png) |
+| `GET /admin` as `researcher` → 403 | ![/admin 403](docs/images/05-app-admin-403-researcher.png) |
+| `GET /admin` as `admin` → 200 | ![/admin 200](docs/images/06-app-admin-200-admin.png) |
 
 ## Repo layout
 
@@ -77,7 +77,7 @@ The Authorization Code + PKCE flow, captured against this stack. The full walkth
 │   ├── 03-oidc-flow.md              # Auth Code+PKCE, Client Credentials, JWT internals
 │   └── images/                      # screenshots referenced from the docs
 └── examples/
-    ├── cvdlink-login-sample/        # vanilla JS PKCE login flow, FastAPI static server
+    ├── cvdlink-login-sample/        # PKCE login flow, FastAPI static server
     └── python-api/                  # FastAPI + PyJWT JWT validation
 ```
 
@@ -85,7 +85,7 @@ The Authorization Code + PKCE flow, captured against this stack. The full walkth
 
 | Flow                       | Used by                  | Doc                                                                                            |
 |----------------------------|--------------------------|------------------------------------------------------------------------------------------------|
-| Authorization Code + PKCE  | SPA, mobile, native      | [`docs/03-oidc-flow.md` §3.1](docs/03-oidc-flow.md#31-authorization-code--pkce)                |
+| Authorization Code + PKCE  | browser, mobile, native  | [`docs/03-oidc-flow.md` §3.1](docs/03-oidc-flow.md#31-authorization-code--pkce)                |
 | Client Credentials         | service-to-service       | [`docs/03-oidc-flow.md` §3.2](docs/03-oidc-flow.md#32-client-credentials)                      |
 | Refresh Token              | extending sessions       | [`docs/03-oidc-flow.md` §3.4](docs/03-oidc-flow.md#34-refresh-tokens)                          |
 | Logout (`end_session`)     | sign-out                 | [`docs/03-oidc-flow.md` §3.5](docs/03-oidc-flow.md#35-logout)                                  |

@@ -1,9 +1,8 @@
 // Minimal Authorization Code + PKCE flow against Keycloak.
-// Vanilla JS — no library — so every step is visible.
 
 const config = {
   authority: "http://localhost:8081/realms/cvdlink",
-  clientId: "spa-client",
+  clientId: "cvdlink-user",
   redirectUri: window.location.origin + "/",
   apiBase: "http://localhost:3001",
   scope: "openid profile email",
