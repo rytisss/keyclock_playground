@@ -38,7 +38,7 @@ def upsert_user(conn: Connection, base_dn: str, user: User) -> None:
     if not conn.add(dn, attributes=attrs):
         if conn.result["description"] != "entryAlreadyExists":
             raise RuntimeError(f"add user failed: {conn.result}")
-        conn.modify(
+        if not conn.modify(
             dn,
             {
                 "cn": [(MODIFY_REPLACE, [user.cn])],
@@ -46,7 +46,8 @@ def upsert_user(conn: Connection, base_dn: str, user: User) -> None:
                 "mail": [(MODIFY_REPLACE, [user.mail])],
                 "userPassword": [(MODIFY_REPLACE, [user.password])],
             },
-        )
+        ):
+            raise RuntimeError(f"modify user failed: {conn.result}")
 
     for gname in user.groups:
         gdn = _group_dn(gname, base_dn)

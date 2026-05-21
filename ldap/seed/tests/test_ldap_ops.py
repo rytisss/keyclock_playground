@@ -44,3 +44,46 @@ def test_upsert_user_sets_password_and_group(ldap_conn, base_dn):
 
     delete_entry(ldap_conn, user_dn)
     delete_entry(ldap_conn, f"cn=testers,ou=groups,{base_dn}")
+
+
+def test_upsert_user_is_idempotent_and_updates_attrs(ldap_conn, base_dn):
+    upsert_group(ldap_conn, base_dn, Group(name="updaters"))
+    user_dn = f"uid=tester2,ou=people,{base_dn}"
+
+    first = User(
+        uid="tester2",
+        cn="Test Two",
+        sn="Two",
+        mail="t2@cvdlink.local",
+        password="pw-first",
+        groups=["updaters"],
+    )
+    upsert_user(ldap_conn, base_dn, first)
+
+    # Second call with changed mail + password must take the modify branch
+    # and succeed without error.
+    updated = User(
+        uid="tester2",
+        cn="Test Two",
+        sn="Two",
+        mail="t2-updated@cvdlink.local",
+        password="pw-second",
+        groups=["updaters"],
+    )
+    upsert_user(ldap_conn, base_dn, updated)
+
+    ldap_conn.search(
+        f"ou=people,{base_dn}",
+        "(uid=tester2)",
+        attributes=["mail"],
+    )
+    assert len(ldap_conn.entries) == 1
+    assert ldap_conn.entries[0]["mail"].value == "t2-updated@cvdlink.local"
+
+    server = Server(os.environ["LDAP_URL"])
+    bind_conn = Connection(server, user=user_dn, password="pw-second", auto_bind=True)
+    assert bind_conn.bound
+    bind_conn.unbind()
+
+    delete_entry(ldap_conn, user_dn)
+    delete_entry(ldap_conn, f"cn=updaters,ou=groups,{base_dn}")
