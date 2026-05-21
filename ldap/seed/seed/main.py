@@ -14,7 +14,7 @@ from .ldap_ops import upsert_group, upsert_user
 log = logging.getLogger("seed")
 
 
-@retry(stop=stop_after_delay(60), wait=wait_fixed(2), reraise=True)
+@retry(stop=stop_after_delay(180), wait=wait_fixed(2), reraise=True)
 def _ldap_connect() -> Connection:
     server = Server(os.environ["LDAP_URL"])
     return Connection(
