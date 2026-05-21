@@ -1,0 +1,17 @@
+users:
+  - uid: alice
+    cn: Alice Anderson
+    sn: Anderson
+    mail: alice@cvdlink.local
+    password: changeme
+    groups: [developers]
+  - uid: bob
+    cn: Bob Brown
+    sn: Brown
+    mail: bob@cvdlink.local
+    password: changeme
+    groups: [admins]
+
+groups:
+  - developers
+  - admins
