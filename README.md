@@ -11,6 +11,7 @@ A self-contained Keycloak playground: spin up Keycloak with one command, then wa
 - [Auth flows covered](#auth-flows-covered)
 - [Default credentials](#default-credentials)
 - [Custom login theme (CVDLINK)](#custom-login-theme-cvdlink)
+- [LDAP federation (optional)](#ldap-federation-optional)
 - [Documentation](#documentation)
 - [License](#license)
 
@@ -50,6 +51,8 @@ uvicorn server:app --port 5173
 
 > ℹ️ If you change `realm-export.json` after the first boot, run `docker compose down -v` (drop the postgres volume) before `up -d` again — `--import-realm` skips realms that already exist.
 
+> ℹ️ Want an OpenLDAP federation demo on the side? See [LDAP federation (optional)](#ldap-federation-optional).
+
 ## Screenshots
 
 The Authorization Code + PKCE flow, captured against this stack. The full walkthrough lives in [`docs/03-oidc-flow.md` §3.1](docs/03-oidc-flow.md#31-authorization-code--pkce).
@@ -75,10 +78,12 @@ The Authorization Code + PKCE flow, captured against this stack. The full walkth
 │   ├── 01-installation.md           # bring up the stack, first admin login
 │   ├── 02-realm-setup.md            # manual click-by-click realm config
 │   ├── 03-oidc-flow.md              # Auth Code+PKCE, Client Credentials, JWT internals
+│   ├── 04-ldap.md                   # LDAP federation (optional)
 │   └── images/                      # screenshots referenced from the docs
-└── examples/
-    ├── cvdlink-login-sample/        # PKCE login flow, FastAPI static server
-    └── python-api/                  # FastAPI + PyJWT JWT validation
+├── examples/
+│   ├── cvdlink-login-sample/        # PKCE login flow, FastAPI static server
+│   └── python-api/                  # FastAPI + PyJWT JWT validation
+└── ldap/                            # OpenLDAP + seed container (opt-in profile)
 ```
 
 ## Auth flows covered
@@ -146,6 +151,28 @@ Out of the box, Keycloak 26's default `keycloak.v2` login theme renders the real
 3. Hard-refresh the login page (theme assets are versioned, so a normal reload usually works).
 4. If you change which theme a realm uses (`loginTheme`) **after** the realm has been imported, you must drop the postgres volume so the realm is re-imported: `docker compose down -v && docker compose up -d`.
 
+## LDAP federation (optional)
+
+An OpenLDAP server federated into a separate `ldap` realm in Keycloak. The
+default `docker compose up -d` flow is unchanged — this is opt-in via a
+Compose profile.
+
+```bash
+# bring up the LDAP profile (openldap + a one-shot seed)
+docker compose --profile ldap up -d --build
+
+# run the integration test suite
+docker compose --profile ldap run --rm ldap-seed pytest -v
+
+# tear down only LDAP
+docker compose --profile ldap down
+```
+
+The seed container creates the `ldap` realm, registers OpenLDAP as a
+`UserStorageProvider`, and writes users/groups from
+[`ldap/users.yaml`](ldap/users.yaml). Full walkthrough:
+[`docs/04-ldap.md`](docs/04-ldap.md).
+
 ## Documentation
 
 1. [`docs/01-installation.md`](docs/01-installation.md) — Docker, first admin login, OIDC discovery doc
@@ -153,6 +180,7 @@ Out of the box, Keycloak 26's default `keycloak.v2` login theme renders the real
 3. [`docs/03-oidc-flow.md`](docs/03-oidc-flow.md) — auth flows + JWT structure
 4. [`examples/python-api/README.md`](examples/python-api/README.md) — resource server walkthrough
 5. [`examples/cvdlink-login-sample/README.md`](examples/cvdlink-login-sample/README.md) — CVDLINK Login Sample walkthrough
+6. [`docs/04-ldap.md`](docs/04-ldap.md) — LDAP federation (optional)
 
 ## License
 
