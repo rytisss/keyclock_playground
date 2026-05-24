@@ -6,7 +6,23 @@ The repo's `realm-export.json` configures everything below automatically. This p
 
 ---
 
-## 2.1 Create the realm
+## 2.1 Abbreviations
+
+Terms used in this guide. Full glossary in
+[`04-ldap.md` §4.1](04-ldap.md#41-abbreviations).
+
+| Short | Long                        | Used here for |
+|-------|-----------------------------|----------------|
+| OIDC  | OpenID Connect              | Client type ("OpenID Connect"). |
+| PKCE  | Proof Key for Code Exchange | Required for the public `cvdlink-user` client. |
+| JWT   | JSON Web Token              | The access token whose `realm_access.roles` you map. |
+| RBAC  | Role-Based Access Control   | The authorization model — realm roles attached to users. |
+| URI   | Uniform Resource Identifier | Redirect URIs configured on the client. |
+| S256  | SHA-256                     | PKCE code-challenge method (`S256`, not `plain`). |
+
+---
+
+## 2.2 Create the realm
 
 1. Top-left realm dropdown → **Create realm**.
 2. **Realm name:** `cvdlink`. **Display name:** `CVDLINK`. Leave the rest at defaults.
@@ -16,7 +32,7 @@ The repo's `realm-export.json` configures everything below automatically. This p
 
 ---
 
-## 2.2 Create realm roles
+## 2.3 Create realm roles
 
 These are the roles your app's authorization will check against. The CVDLINK
 realm uses four roles — the **role name** (slug) is what shows up in
@@ -38,7 +54,7 @@ console renders next to it.
 
 ---
 
-## 2.3 Create the public OIDC client (PKCE)
+## 2.4 Create the public OIDC client (PKCE)
 
 This client represents your browser-based frontend. Public clients **must** use PKCE — they cannot keep a secret safely.
 
@@ -66,7 +82,7 @@ This client represents your browser-based frontend. Public clients **must** use 
 
 ---
 
-## 2.4 Create the API client (confidential, service account)
+## 2.5 Create the API client (confidential, service account)
 
 This client represents a backend service that needs to obtain its own tokens (e.g., for calling another service or for service-to-service auth).
 
@@ -88,7 +104,7 @@ This client represents a backend service that needs to obtain its own tokens (e.
 
 ---
 
-## 2.5 Create users
+## 2.6 Create users
 
 1. **Users** → **Add user**.
 2. Username: `researcher`, Email: `researcher@example.com`, Email verified: **ON** → **Create**.
@@ -102,7 +118,7 @@ This client represents a backend service that needs to obtain its own tokens (e.
 
 ---
 
-## 2.6 (Optional) Map roles into the access token
+## 2.7 (Optional) Map roles into the access token
 
 Keycloak puts realm roles inside `realm_access.roles` in the token by default. If you want them in a custom claim or at the top level, configure a **Client scope** mapper:
 
@@ -113,7 +129,7 @@ For most apps, the default `realm_access.roles` is fine — your resource server
 
 ---
 
-## 2.7 Sanity check: get a token
+## 2.8 Sanity check: get a token
 
 With the realm fully configured, request a token via the password grant **for testing only** (we disabled it in the import; enable it temporarily if you want to try this):
 
@@ -126,22 +142,6 @@ curl -X POST http://localhost:8081/realms/cvdlink/protocol/openid-connect/token 
 ```
 
 Decode the resulting `access_token` at https://jwt.io to inspect claims. The next doc walks through what's inside.
-
----
-
-## 2.8 Abbreviations
-
-Terms that appear above. Full glossary in
-[`04-ldap.md` §4.1](04-ldap.md#41-abbreviations).
-
-| Short | Long                        | Used here for |
-|-------|-----------------------------|----------------|
-| OIDC  | OpenID Connect              | Client type ("OpenID Connect"). |
-| PKCE  | Proof Key for Code Exchange | Required for the public `cvdlink-user` client. |
-| JWT   | JSON Web Token              | The access token whose `realm_access.roles` you map. |
-| RBAC  | Role-Based Access Control   | The authorization model — realm roles attached to users. |
-| URI   | Uniform Resource Identifier | Redirect URIs configured on the client. |
-| S256  | SHA-256                     | PKCE code-challenge method (`S256`, not `plain`). |
 
 ---
 

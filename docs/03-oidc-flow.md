@@ -9,7 +9,36 @@ This page explains both, shows the wire-level requests, and decodes a real JWT.
 
 ---
 
-## 3.1 Authorization Code + PKCE
+## 3.1 Abbreviations
+
+Terms used in this doc. Full glossary in
+[`04-ldap.md` §4.1](04-ldap.md#41-abbreviations).
+
+| Short  | Long                              | Used here for |
+|--------|-----------------------------------|----------------|
+| OIDC   | OpenID Connect                    | The protocol Keycloak speaks. |
+| OAuth  | Open Authorization (OAuth 2.0)    | The framework OIDC layers on top of. |
+| JWT    | JSON Web Token                    | The signed bearer token. |
+| JWKS   | JSON Web Key Set                  | Where the resource server fetches verification keys. |
+| PKCE   | Proof Key for Code Exchange       | Public-client protection in §3.2. |
+| RS256  | RSA Signature with SHA-256        | JWT signing algorithm shown in the header. |
+| SHA256 | Secure Hash Algorithm, 256 bits   | Builds the PKCE `code_challenge`. |
+| BFF    | Backend-for-Frontend              | The httpOnly-cookie pattern mentioned in §3.5. |
+| SSO    | Single Sign-On                    | The session `end_session_endpoint` terminates. |
+| XSS    | Cross-Site Scripting              | The threat against tokens in `localStorage`. |
+| MITM   | Man-In-The-Middle                 | The PKCE threat model in §3.2. |
+| CSRF   | Cross-Site Request Forgery        | What the `state` parameter protects against. |
+| TTL    | Time To Live                      | JWKS cache lifetime. |
+| kid    | Key ID                            | JWT header field that selects the JWKS key. |
+| iss    | Issuer (claim)                    | JWT claim asserting which realm issued the token. |
+| aud    | Audience (claim)                  | JWT claim naming the intended recipient. |
+| exp    | Expiration (claim)                | JWT claim with the expiry epoch. |
+| azp    | Authorized Party (claim)          | JWT claim naming the client that requested the token. |
+| sub    | Subject (claim)                   | Stable user ID inside the JWT. |
+
+---
+
+## 3.2 Authorization Code + PKCE
 
 ```mermaid
 sequenceDiagram
@@ -85,7 +114,7 @@ The screenshots below were captured against the local stack (`docker compose up 
 
 ---
 
-## 3.2 Client Credentials
+## 3.3 Client Credentials
 
 ```mermaid
 sequenceDiagram
@@ -134,7 +163,7 @@ Do **not** use client credentials in a browser app — there is nowhere to safel
 
 ---
 
-## 3.3 The JWT itself
+## 3.4 The JWT itself
 
 A Keycloak access token is a signed JWT: `header.payload.signature`, base64url-encoded.
 
@@ -208,7 +237,7 @@ flowchart LR
 
 ---
 
-## 3.4 Refresh tokens
+## 3.5 Refresh tokens
 
 The token response includes a `refresh_token`. When `access_token` expires (default: 5 min), the client exchanges the refresh token for a new pair:
 
@@ -225,7 +254,7 @@ For service-to-service (client credentials), don't use refresh tokens at all —
 
 ---
 
-## 3.5 Logout
+## 3.6 Logout
 
 Frontend logout = redirect the user to the `end_session_endpoint`:
 
@@ -239,35 +268,6 @@ GET http://localhost:8081/realms/cvdlink/protocol/openid-connect/logout
 This kills the Keycloak SSO session.
 
 **Keycloak 26 requires either `id_token_hint` or `client_id`** on the logout request — passing neither returns `Missing parameters: id_token_hint`. With `id_token_hint` the user is logged out silently; with only `client_id`, Keycloak shows a "do you want to sign out?" confirmation page. The CVDLINK Login Sample passes both, so it works in either state.
-
----
-
-## 3.6 Abbreviations
-
-Terms that appear in this doc. Full glossary in
-[`04-ldap.md` §4.1](04-ldap.md#41-abbreviations).
-
-| Short  | Long                              | Used here for |
-|--------|-----------------------------------|----------------|
-| OIDC   | OpenID Connect                    | The protocol Keycloak speaks. |
-| OAuth  | Open Authorization (OAuth 2.0)    | The framework OIDC layers on top of. |
-| JWT    | JSON Web Token                    | The signed bearer token. |
-| JWKS   | JSON Web Key Set                  | Where the resource server fetches verification keys. |
-| PKCE   | Proof Key for Code Exchange       | Public-client protection in §3.1. |
-| RS256  | RSA Signature with SHA-256        | JWT signing algorithm shown in the header. |
-| SHA256 | Secure Hash Algorithm, 256 bits   | Builds the PKCE `code_challenge`. |
-| BFF    | Backend-for-Frontend              | The httpOnly-cookie pattern mentioned in §3.4. |
-| SSO    | Single Sign-On                    | The session `end_session_endpoint` terminates. |
-| XSS    | Cross-Site Scripting              | The threat against tokens in `localStorage`. |
-| MITM   | Man-In-The-Middle                 | The PKCE threat model in §3.1. |
-| CSRF   | Cross-Site Request Forgery        | What the `state` parameter protects against. |
-| TTL    | Time To Live                      | JWKS cache lifetime. |
-| kid    | Key ID                            | JWT header field that selects the JWKS key. |
-| iss    | Issuer (claim)                    | JWT claim asserting which realm issued the token. |
-| aud    | Audience (claim)                  | JWT claim naming the intended recipient. |
-| exp    | Expiration (claim)                | JWT claim with the expiry epoch. |
-| azp    | Authorized Party (claim)          | JWT claim naming the client that requested the token. |
-| sub    | Subject (claim)                   | Stable user ID inside the JWT. |
 
 ---
 

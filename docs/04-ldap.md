@@ -465,5 +465,5 @@ docker compose down -v
 [`examples/cvdlink-login-sample`](../examples/cvdlink-login-sample/) at
 `http://localhost:8081/realms/ldap` (after creating a client there). If you
 plan to put a browser SPA in front of an LDAP-backed realm, consider the
-**BFF** (Backend-for-Frontend) pattern from [§3.4](03-oidc-flow.md#34-refresh-tokens)
+**BFF** (Backend-for-Frontend) pattern from [§3.5](03-oidc-flow.md#35-refresh-tokens)
 so refresh tokens stay in httpOnly cookies and never touch JavaScript.
