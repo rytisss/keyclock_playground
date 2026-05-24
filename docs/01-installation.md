@@ -7,7 +7,23 @@ This guide spins up Keycloak 26 with Postgres using Docker Compose, then signs y
 
 ---
 
-## 1.1 Start the stack
+## 1.1 Abbreviations
+
+Terms that appear in this guide. The full glossary is in
+[`04-ldap.md` §4.1](04-ldap.md#41-abbreviations).
+
+| Short | Long                        | Used here for |
+|-------|-----------------------------|----------------|
+| OIDC  | OpenID Connect              | The discovery document at `/.well-known/openid-configuration`. |
+| JWT   | JSON Web Token              | Tokens issued by Keycloak. |
+| JWKS  | JSON Web Key Set            | Public keys at `jwks_uri`. |
+| PKCE  | Proof Key for Code Exchange | The flow used by the `cvdlink-user` client. |
+| TLS   | Transport Layer Security    | What `start-dev` does *not* enable. |
+| URI   | Uniform Resource Identifier | The endpoint columns. |
+
+---
+
+## 1.2 Start the stack
 
 From the repo root:
 
@@ -43,7 +59,7 @@ Running the server in development mode.
 
 ---
 
-## 1.2 Open the admin console
+## 1.3 Open the admin console
 
 Navigate to: **http://localhost:8081/admin**
 
@@ -62,7 +78,7 @@ After login you land on the **master** realm. Switch to the imported `cvdlink` r
 
 ---
 
-## 1.3 Verify the imported realm
+## 1.4 Verify the imported realm
 
 In the `cvdlink` realm, confirm the following resources exist:
 
@@ -76,7 +92,7 @@ In the `cvdlink` realm, confirm the following resources exist:
 
 ---
 
-## 1.4 Grab the OIDC discovery document
+## 1.5 Grab the OIDC discovery document
 
 Every Keycloak realm exposes its OIDC config at:
 
@@ -101,7 +117,7 @@ Key endpoints to note (used by the examples):
 
 ---
 
-## 1.5 Stop / reset
+## 1.6 Stop / reset
 
 ```bash
 # stop, keep data

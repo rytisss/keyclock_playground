@@ -4,6 +4,7 @@ A self-contained Keycloak playground: spin up Keycloak with one command, then wa
 
 ## Table of contents
 
+- [Abbreviations](#abbreviations)
 - [Content](#content)
 - [Quickstart](#quickstart)
 - [Screenshots](#screenshots)
@@ -13,7 +14,29 @@ A self-contained Keycloak playground: spin up Keycloak with one command, then wa
 - [Custom login theme (CVDLINK)](#custom-login-theme-cvdlink)
 - [LDAP federation (optional)](#ldap-federation-optional)
 - [Documentation](#documentation)
+- [Acknowledgement](#acknowledgement)
 - [License](#license)
+
+## Abbreviations
+
+Terms used across this README. Each linked doc carries a more focused
+abbreviation table; [`docs/04-ldap.md` §4.1](docs/04-ldap.md#41-abbreviations)
+has the full glossary.
+
+| Short  | Long                              | Used in this file for |
+|--------|-----------------------------------|------------------------|
+| OIDC   | OpenID Connect                    | The auth protocol Keycloak speaks. |
+| JWT    | JSON Web Token                    | The signed bearer token Keycloak issues. |
+| JWKS   | JSON Web Key Set                  | The endpoint that publishes JWT signing keys. |
+| PKCE   | Proof Key for Code Exchange       | OAuth extension required for public clients. |
+| BFF    | Backend-for-Frontend              | Server-side companion that keeps tokens out of JavaScript. |
+| LDAP   | Lightweight Directory Access Protocol | Wire protocol for OpenLDAP. |
+| SSO    | Single Sign-On                    | One Keycloak session, many apps. |
+| IdP    | Identity Provider                 | Keycloak itself. |
+| SPA    | Single-Page Application           | Browser app, e.g. the CVDLINK Login Sample. |
+| FTL    | FreeMarker Template Language      | Keycloak's login-theme template language. |
+| CSS    | Cascading Style Sheets            | Used by the custom login theme. |
+| DOM    | Document Object Model             | Referenced in the theme description. |
 
 ## Content
 
@@ -55,7 +78,7 @@ uvicorn server:app --port 5173
 
 ## Screenshots
 
-The Authorization Code + PKCE flow, captured against this stack. The full walkthrough lives in [`docs/03-oidc-flow.md` §3.1](docs/03-oidc-flow.md#31-authorization-code--pkce).
+The Authorization Code + PKCE flow, captured against this stack. The full walkthrough lives in [`docs/03-oidc-flow.md` §3.2](docs/03-oidc-flow.md#32-authorization-code--pkce).
 
 | Step | Screenshot |
 |------|------------|
@@ -90,10 +113,10 @@ The Authorization Code + PKCE flow, captured against this stack. The full walkth
 
 | Flow                       | Used by                  | Doc                                                                                            |
 |----------------------------|--------------------------|------------------------------------------------------------------------------------------------|
-| Authorization Code + PKCE  | browser, mobile, native  | [`docs/03-oidc-flow.md` §3.1](docs/03-oidc-flow.md#31-authorization-code--pkce)                |
-| Client Credentials         | service-to-service       | [`docs/03-oidc-flow.md` §3.2](docs/03-oidc-flow.md#32-client-credentials)                      |
-| Refresh Token              | extending sessions       | [`docs/03-oidc-flow.md` §3.4](docs/03-oidc-flow.md#34-refresh-tokens)                          |
-| Logout (`end_session`)     | sign-out                 | [`docs/03-oidc-flow.md` §3.5](docs/03-oidc-flow.md#35-logout)                                  |
+| Authorization Code + PKCE  | browser, mobile, native  | [`docs/03-oidc-flow.md` §3.2](docs/03-oidc-flow.md#32-authorization-code--pkce)                |
+| Client Credentials         | service-to-service       | [`docs/03-oidc-flow.md` §3.3](docs/03-oidc-flow.md#33-client-credentials)                      |
+| Refresh Token              | extending sessions       | [`docs/03-oidc-flow.md` §3.5](docs/03-oidc-flow.md#35-refresh-tokens)                          |
+| Logout (`end_session`)     | sign-out                 | [`docs/03-oidc-flow.md` §3.6](docs/03-oidc-flow.md#36-logout)                                  |
 
 ## Default credentials
 
@@ -153,12 +176,13 @@ Out of the box, Keycloak 26's default `keycloak.v2` login theme renders the real
 
 ## LDAP federation (optional)
 
-An OpenLDAP server federated into a separate `ldap` realm in Keycloak. The
-default `docker compose up -d` flow is unchanged — this is opt-in via a
-Compose profile.
+An **OpenLDAP** server federated into a separate `ldap` realm in Keycloak —
+demonstrates Keycloak's *external user store* pattern. The default
+`docker compose up -d` flow is unchanged; LDAP is opt-in via a Docker Compose
+profile.
 
 ```bash
-# bring up the LDAP profile (openldap + a one-shot seed)
+# bring up the LDAP profile (openldap + a one-shot seed container)
 docker compose --profile ldap up -d --build
 
 # run the integration test suite
@@ -168,10 +192,21 @@ docker compose --profile ldap run --rm ldap-seed pytest -v
 docker compose --profile ldap down
 ```
 
-The seed container creates the `ldap` realm, registers OpenLDAP as a
-`UserStorageProvider`, and writes users/groups from
-[`ldap/users.yaml`](ldap/users.yaml). Full walkthrough:
-[`docs/04-ldap.md`](docs/04-ldap.md).
+The seed container creates the `ldap` realm, registers OpenLDAP as a Keycloak
+`UserStorageProvider`, and writes users + groups from
+[`ldap/users.yaml`](ldap/users.yaml):
+
+| Username | LDAP groups                                | CVDLINK role equivalent                                    |
+|----------|--------------------------------------------|-------------------------------------------------------------|
+| `rytis`  | `admins`, `researchers`                    | Admin + Researcher                                          |
+| `katie`  | `researchers`                              | Researcher                                                  |
+| `michael`  | `healthcare-professionals`                 | Healthcare Professional                                     |
+| `marek`  | `resource-managers`                        | Resource Manager                                            |
+| `sienna` | `healthcare-professionals`, `researchers`  | Healthcare Professional + Researcher (multi-group demo)     |
+
+All five users share the password `changeme`. The full walkthrough — directory
+tree, login sequence diagram, glossary of LDAP terms (DN, RDN, OU, CN, …), and
+screenshots — lives in [`docs/04-ldap.md`](docs/04-ldap.md).
 
 ## Documentation
 
@@ -181,6 +216,12 @@ The seed container creates the `ldap` realm, registers OpenLDAP as a
 4. [`examples/python-api/README.md`](examples/python-api/README.md) — resource server walkthrough
 5. [`examples/cvdlink-login-sample/README.md`](examples/cvdlink-login-sample/README.md) — CVDLINK Login Sample walkthrough
 6. [`docs/04-ldap.md`](docs/04-ldap.md) — LDAP federation (optional)
+
+## Acknowledgement
+
+This research was supported by the [CVDLINK](https://cvdlink-project.eu/) project (EU Horizon grant agreement N°101137278)
+
+[![](https://raw.githubusercontent.com/rytisss/immutable-logging/main/res/CVDLINK_logo-v.png)](https://raw.githubusercontent.com/rytisss/immutable-logging/main/res/CVDLINK_logo-v.png)
 
 ## License
 

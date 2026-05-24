@@ -2,6 +2,22 @@
 
 HTML + JS demonstrating the Authorization Code + PKCE flow against Keycloak — every step is in `app.js`.
 
+## Abbreviations
+
+Terms used in this README. Full glossary in
+[`../../docs/04-ldap.md` §4.1](../../docs/04-ldap.md#41-abbreviations).
+
+| Short | Long                            | Used here for |
+|-------|---------------------------------|----------------|
+| PKCE  | Proof Key for Code Exchange     | The flow this sample implements. |
+| JWT   | JSON Web Token                  | The token decoded after login. |
+| CSRF  | Cross-Site Request Forgery      | What the `state` parameter mitigates. |
+| BFF   | Backend-for-Frontend            | Production alternative to storing tokens in `sessionStorage`. |
+| XSS   | Cross-Site Scripting            | The threat `BFF` defends against. |
+| SPA   | Single-Page Application         | This sample. |
+| HTTPS | HTTP over TLS                   | Required in production. |
+| API   | Application Programming Interface | The Python API the sample calls. |
+
 ## What it does
 
 1. Generates a `code_verifier` (random) and `code_challenge` = `SHA256(verifier)`.

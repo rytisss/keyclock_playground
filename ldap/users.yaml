@@ -1,17 +1,37 @@
 users:
-  - uid: alice
-    cn: Alice Anderson
-    sn: Anderson
-    mail: alice@cvdlink.local
-    password: changeme
-    groups: [developers]
-  - uid: bob
-    cn: Bob Brown
-    sn: Brown
-    mail: bob@cvdlink.local
+  - uid: rytis
+    cn: Rytis
+    sn: Rytis
+    mail: rytis@cvdlink.local
     password: changeme
     groups: [admins]
+  - uid: katie
+    cn: Katie
+    sn: Katie
+    mail: katie@cvdlink.local
+    password: changeme
+    groups: [researchers]
+  - uid: michael
+    cn: Michael
+    sn: Michael
+    mail: michael@cvdlink.local
+    password: changeme
+    groups: [healthcare-professionals]
+  - uid: marek
+    cn: Marek
+    sn: Marek
+    mail: marek@cvdlink.local
+    password: changeme
+    groups: [resource-managers]
+  - uid: sienna
+    cn: Sienna
+    sn: Sienna
+    mail: sienna@cvdlink.local
+    password: changeme
+    groups: [researchers]
 
 groups:
-  - developers
+  - healthcare-professionals
+  - researchers
+  - resource-managers
   - admins
