@@ -1,32 +1,32 @@
 users:
   - uid: rytis
-    cn: Rytis Augustauskas
-    sn: Augustauskas
+    cn: Rytis
+    sn: Rytis
     mail: rytis@cvdlink.local
     password: changeme
     groups: [admins, researchers]
-  - uid: vaidotas
-    cn: Vaidotas Kazlauskas
-    sn: Kazlauskas
-    mail: vaidotas@cvdlink.local
+  - uid: katie
+    cn: Katie
+    sn: Katie
+    mail: katie@cvdlink.local
     password: changeme
     groups: [researchers]
-  - uid: ana
-    cn: Ana Petraite
-    sn: Petraite
-    mail: ana@cvdlink.local
+  - uid: michael
+    cn: Michael
+    sn: Michael
+    mail: michael@cvdlink.local
     password: changeme
     groups: [healthcare-professionals]
-  - uid: daivaras
-    cn: Daivaras Jonaitis
-    sn: Jonaitis
-    mail: daivaras@cvdlink.local
+  - uid: marek
+    cn: Marek
+    sn: Marek
+    mail: marek@cvdlink.local
     password: changeme
     groups: [resource-managers]
-  - uid: monika
-    cn: Monika Survilaite
-    sn: Survilaite
-    mail: monika@cvdlink.local
+  - uid: sienna
+    cn: Sienna
+    sn: Sienna
+    mail: sienna@cvdlink.local
     password: changeme
     groups: [healthcare-professionals, researchers]
 

@@ -174,13 +174,13 @@ The seed container creates the `ldap` realm, registers OpenLDAP as a Keycloak
 `UserStorageProvider`, and writes users + groups from
 [`ldap/users.yaml`](ldap/users.yaml):
 
-| Username   | Full name             | LDAP groups                                | CVDLINK role equivalent                                    |
-|------------|-----------------------|--------------------------------------------|-------------------------------------------------------------|
-| `rytis`    | Rytis Augustauskas    | `admins`, `researchers`                    | Admin + Researcher                                          |
-| `vaidotas` | Vaidotas Kazlauskas   | `researchers`                              | Researcher                                                  |
-| `ana`      | Ana Petraite          | `healthcare-professionals`                 | Healthcare Professional                                     |
-| `daivaras` | Daivaras Jonaitis     | `resource-managers`                        | Resource Manager                                            |
-| `monika`   | Monika Survilaite     | `healthcare-professionals`, `researchers`  | Healthcare Professional + Researcher (multi-group demo)     |
+| Username | LDAP groups                                | CVDLINK role equivalent                                    |
+|----------|--------------------------------------------|-------------------------------------------------------------|
+| `rytis`  | `admins`, `researchers`                    | Admin + Researcher                                          |
+| `katie`  | `researchers`                              | Researcher                                                  |
+| `michael`  | `healthcare-professionals`                 | Healthcare Professional                                     |
+| `marek`  | `resource-managers`                        | Resource Manager                                            |
+| `sienna` | `healthcare-professionals`, `researchers`  | Healthcare Professional + Researcher (multi-group demo)     |
 
 All five users share the password `changeme`. The full walkthrough — directory
 tree, login sequence diagram, glossary of LDAP terms (DN, RDN, OU, CN, …), and

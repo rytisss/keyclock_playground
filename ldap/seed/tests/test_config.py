@@ -9,8 +9,8 @@ def test_load_config_parses_users_and_groups(tmp_path: Path):
     path.write_text(textwrap.dedent("""
         users:
           - uid: rytis
-            cn: Rytis Augustauskas
-            sn: Augustauskas
+            cn: Rytis
+            sn: Rytis
             mail: rytis@cvdlink.local
             password: secret
             groups: [researchers]
@@ -24,8 +24,8 @@ def test_load_config_parses_users_and_groups(tmp_path: Path):
     assert cfg.users == [
         User(
             uid="rytis",
-            cn="Rytis Augustauskas",
-            sn="Augustauskas",
+            cn="Rytis",
+            sn="Rytis",
             mail="rytis@cvdlink.local",
             password="secret",
             groups=["researchers"],

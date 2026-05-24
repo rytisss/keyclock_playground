@@ -27,9 +27,9 @@ keep a separate tab open to look them up.
 | **RDN**   | Relative Distinguished Name           | The left-most piece of a DN — the name *relative* to the parent. For a user it is usually `uid=rytis`. |
 | **DC**    | Domain Component                      | One label of the directory root. `dc=cvdlink,dc=local` mirrors the DNS name `cvdlink.local`. |
 | **OU**    | Organizational Unit                   | A subtree inside the directory. We use two: `ou=people` for users and `ou=groups` for groups. |
-| **CN**    | Common Name                           | Display name of an entry. For users: full name (`Rytis Augustauskas`); for groups: the group name (`admins`). |
+| **CN**    | Common Name                           | Display name of an entry. For users: their first name (`Rytis`, `Katie`, …); for groups: the group name (`admins`). |
 | **SN**    | Surname                               | Family name attribute required by the `inetOrgPerson` schema. |
-| **UID**   | User ID                               | Short login name (`rytis`, `vaidotas`, …). Used as the `uid` attribute and as the RDN. |
+| **UID**   | User ID                               | Short login name (`rytis`, `katie`, …). Used as the `uid` attribute and as the RDN. |
 | **LDIF**  | LDAP Data Interchange Format          | Textual representation of directory entries. [`bootstrap.ldif`](../ldap/bootstrap.ldif) is one example. |
 | **IdP**   | Identity Provider                     | The service that *issues* identities and tokens. Keycloak is the IdP here. |
 | **SP**    | Service Provider / Resource Server    | An app that *consumes* tokens. The Python API in `examples/python-api` is an SP. |
@@ -65,7 +65,7 @@ playground):
 
 | Realm  | Federation                        | Users (from `ldap/users.yaml`)                          | Groups                                                              |
 |--------|-----------------------------------|---------------------------------------------------------|----------------------------------------------------------------------|
-| `ldap` | OpenLDAP, `editMode: WRITABLE`    | `rytis`, `vaidotas`, `ana`, `daivaras`, `monika`        | `admins`, `researchers`, `healthcare-professionals`, `resource-managers` |
+| `ldap` | OpenLDAP, `editMode: WRITABLE`    | `rytis`, `katie`, `michael`, `marek`, `sienna`            | `admins`, `researchers`, `healthcare-professionals`, `resource-managers` |
 
 The original `cvdlink` realm is untouched.
 
@@ -74,7 +74,7 @@ The original `cvdlink` realm is untouched.
 ```mermaid
 flowchart LR
     subgraph Browser["Browser / API client"]
-      user["End user<br/>(rytis, vaidotas, …)"]
+      user["End user<br/>(rytis, katie, …)"]
     end
 
     subgraph Stack["docker compose --profile ldap"]
@@ -103,10 +103,10 @@ OpenLDAP stores entries as a tree. The shape this playground seeds looks like:
 dc=cvdlink,dc=local
 ├── ou=people
 │   ├── uid=rytis         (CVDLINK Admin + Researcher)
-│   ├── uid=vaidotas      (CVDLINK Researcher)
-│   ├── uid=ana           (CVDLINK Healthcare Professional)
-│   ├── uid=daivaras      (CVDLINK Resource Manager)
-│   └── uid=monika        (CVDLINK Healthcare Professional + Researcher)
+│   ├── uid=katie         (CVDLINK Researcher)
+│   ├── uid=michael         (CVDLINK Healthcare Professional)
+│   ├── uid=marek         (CVDLINK Resource Manager)
+│   └── uid=sienna        (CVDLINK Healthcare Professional + Researcher)
 └── ou=groups
     ├── cn=admins
     ├── cn=researchers
@@ -184,8 +184,8 @@ Expected last line: `INFO done`.
 
 1. Open <http://localhost:8081/admin> (`admin` / `admin`).
 2. Switch the realm dropdown (top-left) to `ldap`.
-3. **Users** → all five seeded users (`rytis`, `vaidotas`, `ana`, `daivaras`,
-   `monika`) appear in the list.
+3. **Users** → all five seeded users (`rytis`, `katie`, `michael`, `marek`,
+   `sienna`) appear in the list.
 4. **User federation** → the `ldap` `UserStorageProvider` is listed and
    *Enabled*.
 5. **Groups** → `admins`, `researchers`, `healthcare-professionals`,
@@ -242,11 +242,11 @@ sync, all four LDAP groups appear in the realm:
 
 #### Group membership
 
-The interesting case is `monika`, who belongs to *two* groups in LDAP
+The interesting case is `sienna`, who belongs to *two* groups in LDAP
 (`healthcare-professionals` and `researchers`). Multi-group membership flows
 through the mapper unchanged:
 
-![monika user with two group memberships](images/25-ldap-user-groups.png)
+![sienna user with two group memberships](images/25-ldap-user-groups.png)
 
 ### 4.4.4 Force an immediate group sync
 
@@ -291,21 +291,21 @@ dn: uid=rytis,ou=people,dc=cvdlink,dc=local
 uid: rytis
 mail: rytis@cvdlink.local
 
-dn: uid=vaidotas,ou=people,dc=cvdlink,dc=local
-uid: vaidotas
-mail: vaidotas@cvdlink.local
+dn: uid=katie,ou=people,dc=cvdlink,dc=local
+uid: katie
+mail: katie@cvdlink.local
 
-dn: uid=ana,ou=people,dc=cvdlink,dc=local
-uid: ana
-mail: ana@cvdlink.local
+dn: uid=michael,ou=people,dc=cvdlink,dc=local
+uid: michael
+mail: michael@cvdlink.local
 
-dn: uid=daivaras,ou=people,dc=cvdlink,dc=local
-uid: daivaras
-mail: daivaras@cvdlink.local
+dn: uid=marek,ou=people,dc=cvdlink,dc=local
+uid: marek
+mail: marek@cvdlink.local
 
-dn: uid=monika,ou=people,dc=cvdlink,dc=local
-uid: monika
-mail: monika@cvdlink.local
+dn: uid=sienna,ou=people,dc=cvdlink,dc=local
+uid: sienna
+mail: sienna@cvdlink.local
 ```
 
 Fetch a single user through Keycloak's Admin API instead — the entry comes
@@ -361,13 +361,13 @@ are left alone, and new users are added to whichever groups the YAML names.
 The seeded directory mirrors the CVDLINK domain model — each LDAP group lines
 up with one of the realm roles you saw in [§Default credentials](../README.md#default-credentials).
 
-| Username   | Full name             | LDAP groups                                | Maps to CVDLINK role(s)                                    |
-|------------|-----------------------|--------------------------------------------|-------------------------------------------------------------|
-| `rytis`    | Rytis Augustauskas    | `admins`, `researchers`                    | CVDLINK Admin + CVDLINK Researcher                          |
-| `vaidotas` | Vaidotas Kazlauskas   | `researchers`                              | CVDLINK Researcher                                          |
-| `ana`      | Ana Petraite          | `healthcare-professionals`                 | CVDLINK Healthcare Professional                             |
-| `daivaras` | Daivaras Jonaitis     | `resource-managers`                        | CVDLINK Resource Manager                                    |
-| `monika`   | Monika Survilaite     | `healthcare-professionals`, `researchers`  | CVDLINK Healthcare Professional + CVDLINK Researcher        |
+| Username | LDAP groups                                | Maps to CVDLINK role(s)                                    |
+|----------|--------------------------------------------|-------------------------------------------------------------|
+| `rytis`  | `admins`, `researchers`                    | CVDLINK Admin + CVDLINK Researcher                          |
+| `katie`  | `researchers`                              | CVDLINK Researcher                                          |
+| `michael`  | `healthcare-professionals`                 | CVDLINK Healthcare Professional                             |
+| `marek`  | `resource-managers`                        | CVDLINK Resource Manager                                    |
+| `sienna` | `healthcare-professionals`, `researchers`  | CVDLINK Healthcare Professional + CVDLINK Researcher        |
 
 All five users share the password `changeme` for local play. The mapping from
 LDAP group → realm role is **not automatic** — Keycloak's group-mapper makes
@@ -396,7 +396,7 @@ Covers:
 - **`test_ldap_ops.py`** — LDAP upsert idempotency, password bind, group
   membership, and the `modify`-branch update path.
 - **`test_directory.py`** — end-to-end visibility in OpenLDAP and in the
-  federated Keycloak realm (incl. multi-group membership via `monika`).
+  federated Keycloak realm (incl. multi-group membership via `sienna`).
 
 ---
 
@@ -408,10 +408,10 @@ Edit [`ldap/users.yaml`](../ldap/users.yaml):
 
 ```yaml
 users:
-  - uid: laura
-    cn: Laura Kavaliauskaite
-    sn: Kavaliauskaite
-    mail: laura@cvdlink.local
+  - uid: nora
+    cn: Nora
+    sn: Nora
+    mail: nora@cvdlink.local
     password: changeme
     groups: [researchers]
 ```
@@ -433,12 +433,12 @@ table).
 ```bash
 docker compose exec openldap ldapadd -x \
   -D "cn=admin,dc=cvdlink,dc=local" -w admin <<'EOF'
-dn: uid=laura,ou=people,dc=cvdlink,dc=local
+dn: uid=nora,ou=people,dc=cvdlink,dc=local
 objectClass: inetOrgPerson
-uid: laura
-cn: Laura Kavaliauskaite
-sn: Kavaliauskaite
-mail: laura@cvdlink.local
+uid: nora
+cn: Nora
+sn: Nora
+mail: nora@cvdlink.local
 userPassword: changeme
 EOF
 ```

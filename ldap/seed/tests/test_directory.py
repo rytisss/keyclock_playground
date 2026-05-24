@@ -47,8 +47,8 @@ def test_group_membership(ldap_conn, base_dn):
 
 
 def test_multi_group_membership(ldap_conn, base_dn):
-    """monika is in both healthcare-professionals and researchers."""
-    expected_dn = f"uid=monika,ou=people,{base_dn}"
+    """sienna is in both healthcare-professionals and researchers."""
+    expected_dn = f"uid=sienna,ou=people,{base_dn}"
     for group in ("healthcare-professionals", "researchers"):
         ldap_conn.search(
             f"cn={group},ou=groups,{base_dn}",
@@ -56,5 +56,5 @@ def test_multi_group_membership(ldap_conn, base_dn):
             attributes=["member"],
         )
         assert expected_dn in ldap_conn.entries[0]["member"].values, (
-            f"monika missing from {group}"
+            f"sienna missing from {group}"
         )
