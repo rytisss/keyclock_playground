@@ -5,16 +5,16 @@ from ldap3 import Connection, Server
 
 
 def test_seeded_user_present_in_ldap(ldap_conn, base_dn):
-    ldap_conn.search(f"ou=people,{base_dn}", "(uid=alice)", attributes=["mail"])
+    ldap_conn.search(f"ou=people,{base_dn}", "(uid=rytis)", attributes=["mail"])
     assert len(ldap_conn.entries) == 1
-    assert ldap_conn.entries[0]["mail"].value == "alice@cvdlink.local"
+    assert ldap_conn.entries[0]["mail"].value == "rytis@cvdlink.local"
 
 
 def test_seeded_user_can_bind(base_dn):
     server = Server(os.environ["LDAP_URL"])
     conn = Connection(
         server,
-        user=f"uid=alice,ou=people,{base_dn}",
+        user=f"uid=rytis,ou=people,{base_dn}",
         password="changeme",
         auto_bind=True,
     )
@@ -31,16 +31,30 @@ def test_user_visible_in_keycloak_realm():
         user_realm_name="master",
         verify=False,
     )
-    users = admin.get_users({"username": "alice"})
-    assert any(u["username"] == "alice" for u in users), "alice not federated into Keycloak"
+    users = admin.get_users({"username": "rytis"})
+    assert any(u["username"] == "rytis" for u in users), "rytis not federated into Keycloak"
 
 
 def test_group_membership(ldap_conn, base_dn):
     ldap_conn.search(
-        f"cn=developers,ou=groups,{base_dn}",
+        f"cn=researchers,ou=groups,{base_dn}",
         "(objectClass=groupOfNames)",
         attributes=["member"],
     )
     assert len(ldap_conn.entries) == 1
     members = ldap_conn.entries[0]["member"].values
-    assert f"uid=alice,ou=people,{base_dn}" in members
+    assert f"uid=rytis,ou=people,{base_dn}" in members
+
+
+def test_multi_group_membership(ldap_conn, base_dn):
+    """monika is in both healthcare-professionals and researchers."""
+    expected_dn = f"uid=monika,ou=people,{base_dn}"
+    for group in ("healthcare-professionals", "researchers"):
+        ldap_conn.search(
+            f"cn={group},ou=groups,{base_dn}",
+            "(objectClass=groupOfNames)",
+            attributes=["member"],
+        )
+        assert expected_dn in ldap_conn.entries[0]["member"].values, (
+            f"monika missing from {group}"
+        )

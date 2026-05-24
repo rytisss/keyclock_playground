@@ -1,17 +1,37 @@
 users:
-  - uid: alice
-    cn: Alice Anderson
-    sn: Anderson
-    mail: alice@cvdlink.local
+  - uid: rytis
+    cn: Rytis Augustauskas
+    sn: Augustauskas
+    mail: rytis@cvdlink.local
     password: changeme
-    groups: [developers]
-  - uid: bob
-    cn: Bob Brown
-    sn: Brown
-    mail: bob@cvdlink.local
+    groups: [admins, researchers]
+  - uid: vaidotas
+    cn: Vaidotas Kazlauskas
+    sn: Kazlauskas
+    mail: vaidotas@cvdlink.local
     password: changeme
-    groups: [admins]
+    groups: [researchers]
+  - uid: ana
+    cn: Ana Petraite
+    sn: Petraite
+    mail: ana@cvdlink.local
+    password: changeme
+    groups: [healthcare-professionals]
+  - uid: daivaras
+    cn: Daivaras Jonaitis
+    sn: Jonaitis
+    mail: daivaras@cvdlink.local
+    password: changeme
+    groups: [resource-managers]
+  - uid: monika
+    cn: Monika Survilaite
+    sn: Survilaite
+    mail: monika@cvdlink.local
+    password: changeme
+    groups: [healthcare-professionals, researchers]
 
 groups:
-  - developers
+  - healthcare-professionals
+  - researchers
+  - resource-managers
   - admins

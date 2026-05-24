@@ -13,6 +13,7 @@ A self-contained Keycloak playground: spin up Keycloak with one command, then wa
 - [Custom login theme (CVDLINK)](#custom-login-theme-cvdlink)
 - [LDAP federation (optional)](#ldap-federation-optional)
 - [Documentation](#documentation)
+- [Acknowledgement](#acknowledgement)
 - [License](#license)
 
 ## Content
@@ -153,12 +154,13 @@ Out of the box, Keycloak 26's default `keycloak.v2` login theme renders the real
 
 ## LDAP federation (optional)
 
-An OpenLDAP server federated into a separate `ldap` realm in Keycloak. The
-default `docker compose up -d` flow is unchanged — this is opt-in via a
-Compose profile.
+An **OpenLDAP** server federated into a separate `ldap` realm in Keycloak —
+demonstrates Keycloak's *external user store* pattern. The default
+`docker compose up -d` flow is unchanged; LDAP is opt-in via a Docker Compose
+profile.
 
 ```bash
-# bring up the LDAP profile (openldap + a one-shot seed)
+# bring up the LDAP profile (openldap + a one-shot seed container)
 docker compose --profile ldap up -d --build
 
 # run the integration test suite
@@ -168,10 +170,21 @@ docker compose --profile ldap run --rm ldap-seed pytest -v
 docker compose --profile ldap down
 ```
 
-The seed container creates the `ldap` realm, registers OpenLDAP as a
-`UserStorageProvider`, and writes users/groups from
-[`ldap/users.yaml`](ldap/users.yaml). Full walkthrough:
-[`docs/04-ldap.md`](docs/04-ldap.md).
+The seed container creates the `ldap` realm, registers OpenLDAP as a Keycloak
+`UserStorageProvider`, and writes users + groups from
+[`ldap/users.yaml`](ldap/users.yaml):
+
+| Username   | Full name             | LDAP groups                                | CVDLINK role equivalent                                    |
+|------------|-----------------------|--------------------------------------------|-------------------------------------------------------------|
+| `rytis`    | Rytis Augustauskas    | `admins`, `researchers`                    | Admin + Researcher                                          |
+| `vaidotas` | Vaidotas Kazlauskas   | `researchers`                              | Researcher                                                  |
+| `ana`      | Ana Petraite          | `healthcare-professionals`                 | Healthcare Professional                                     |
+| `daivaras` | Daivaras Jonaitis     | `resource-managers`                        | Resource Manager                                            |
+| `monika`   | Monika Survilaite     | `healthcare-professionals`, `researchers`  | Healthcare Professional + Researcher (multi-group demo)     |
+
+All five users share the password `changeme`. The full walkthrough — directory
+tree, login sequence diagram, glossary of LDAP terms (DN, RDN, OU, CN, …), and
+screenshots — lives in [`docs/04-ldap.md`](docs/04-ldap.md).
 
 ## Documentation
 
@@ -181,6 +194,12 @@ The seed container creates the `ldap` realm, registers OpenLDAP as a
 4. [`examples/python-api/README.md`](examples/python-api/README.md) — resource server walkthrough
 5. [`examples/cvdlink-login-sample/README.md`](examples/cvdlink-login-sample/README.md) — CVDLINK Login Sample walkthrough
 6. [`docs/04-ldap.md`](docs/04-ldap.md) — LDAP federation (optional)
+
+## Acknowledgement
+
+This research was supported by the [CVDLINK](https://cvdlink-project.eu/) project (EU Horizon grant agreement N°101137278)
+
+[![](https://raw.githubusercontent.com/rytisss/immutable-logging/main/res/CVDLINK_logo-v.png)](https://raw.githubusercontent.com/rytisss/immutable-logging/main/res/CVDLINK_logo-v.png)
 
 ## License
 
