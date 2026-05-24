@@ -102,11 +102,11 @@ OpenLDAP stores entries as a tree. The shape this playground seeds looks like:
 ```text
 dc=cvdlink,dc=local
 ├── ou=people
-│   ├── uid=rytis         (CVDLINK Admin + Researcher)
+│   ├── uid=rytis         (CVDLINK Admin)
 │   ├── uid=katie         (CVDLINK Researcher)
-│   ├── uid=michael         (CVDLINK Healthcare Professional)
+│   ├── uid=michael       (CVDLINK Healthcare Professional)
 │   ├── uid=marek         (CVDLINK Resource Manager)
-│   └── uid=sienna        (CVDLINK Healthcare Professional + Researcher)
+│   └── uid=sienna        (CVDLINK Researcher)
 └── ou=groups
     ├── cn=admins
     ├── cn=researchers
@@ -136,7 +136,7 @@ sequenceDiagram
     KC->>L: bind as uid=rytis with submitted password
     L-->>KC: bind OK
     KC->>L: search groups containing this DN (group-mapper)
-    L-->>KC: admins, researchers
+    L-->>KC: admins
     KC-->>U: session cookie + redirect to account console
     Note over KC: A federated Keycloak user is created<br/>(or refreshed) for rytis
 ```
@@ -242,11 +242,11 @@ sync, all four LDAP groups appear in the realm:
 
 #### Group membership
 
-The interesting case is `sienna`, who belongs to *two* groups in LDAP
-(`healthcare-professionals` and `researchers`). Multi-group membership flows
-through the mapper unchanged:
+Every user belongs to exactly one group. Here is `sienna` in `researchers` —
+the **Groups** tab on the user detail page is what Keycloak shows after the
+group-mapper has resolved the `member` references from LDAP:
 
-![sienna user with two group memberships](images/25-ldap-user-groups.png)
+![sienna user with single group membership](images/25-ldap-user-groups.png)
 
 ### 4.4.4 Force an immediate group sync
 
@@ -361,13 +361,13 @@ are left alone, and new users are added to whichever groups the YAML names.
 The seeded directory mirrors the CVDLINK domain model — each LDAP group lines
 up with one of the realm roles you saw in [§Default credentials](../README.md#default-credentials).
 
-| Username | LDAP groups                                | Maps to CVDLINK role(s)                                    |
-|----------|--------------------------------------------|-------------------------------------------------------------|
-| `rytis`  | `admins`, `researchers`                    | CVDLINK Admin + CVDLINK Researcher                          |
-| `katie`  | `researchers`                              | CVDLINK Researcher                                          |
-| `michael`  | `healthcare-professionals`                 | CVDLINK Healthcare Professional                             |
-| `marek`  | `resource-managers`                        | CVDLINK Resource Manager                                    |
-| `sienna` | `healthcare-professionals`, `researchers`  | CVDLINK Healthcare Professional + CVDLINK Researcher        |
+| Username  | LDAP group                  | Maps to CVDLINK role             |
+|-----------|-----------------------------|-----------------------------------|
+| `rytis`   | `admins`                    | CVDLINK Admin                     |
+| `katie`   | `researchers`               | CVDLINK Researcher                |
+| `michael` | `healthcare-professionals`  | CVDLINK Healthcare Professional   |
+| `marek`   | `resource-managers`         | CVDLINK Resource Manager          |
+| `sienna`  | `researchers`               | CVDLINK Researcher                |
 
 All five users share the password `changeme` for local play. The mapping from
 LDAP group → realm role is **not automatic** — Keycloak's group-mapper makes
@@ -396,7 +396,8 @@ Covers:
 - **`test_ldap_ops.py`** — LDAP upsert idempotency, password bind, group
   membership, and the `modify`-branch update path.
 - **`test_directory.py`** — end-to-end visibility in OpenLDAP and in the
-  federated Keycloak realm (incl. multi-group membership via `sienna`).
+  federated Keycloak realm (every seeded user present, single-group
+  membership intact).
 
 ---
 

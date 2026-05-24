@@ -13,6 +13,7 @@ A self-contained Keycloak playground: spin up Keycloak with one command, then wa
 - [Custom login theme (CVDLINK)](#custom-login-theme-cvdlink)
 - [LDAP federation (optional)](#ldap-federation-optional)
 - [Documentation](#documentation)
+- [Abbreviations](#abbreviations)
 - [Acknowledgement](#acknowledgement)
 - [License](#license)
 
@@ -194,6 +195,27 @@ screenshots — lives in [`docs/04-ldap.md`](docs/04-ldap.md).
 4. [`examples/python-api/README.md`](examples/python-api/README.md) — resource server walkthrough
 5. [`examples/cvdlink-login-sample/README.md`](examples/cvdlink-login-sample/README.md) — CVDLINK Login Sample walkthrough
 6. [`docs/04-ldap.md`](docs/04-ldap.md) — LDAP federation (optional)
+
+## Abbreviations
+
+Terms used across this README. Each linked doc carries a more focused
+abbreviation table; [`docs/04-ldap.md` §4.1](docs/04-ldap.md#41-abbreviations)
+has the full glossary.
+
+| Short  | Long                              | Used in this file for |
+|--------|-----------------------------------|------------------------|
+| OIDC   | OpenID Connect                    | The auth protocol Keycloak speaks. |
+| JWT    | JSON Web Token                    | The signed bearer token Keycloak issues. |
+| JWKS   | JSON Web Key Set                  | The endpoint that publishes JWT signing keys. |
+| PKCE   | Proof Key for Code Exchange       | OAuth extension required for public clients. |
+| BFF    | Backend-for-Frontend              | Server-side companion that keeps tokens out of JavaScript. |
+| LDAP   | Lightweight Directory Access Protocol | Wire protocol for OpenLDAP. |
+| SSO    | Single Sign-On                    | One Keycloak session, many apps. |
+| IdP    | Identity Provider                 | Keycloak itself. |
+| SPA    | Single-Page Application           | Browser app, e.g. the CVDLINK Login Sample. |
+| FTL    | FreeMarker Template Language      | Keycloak's login-theme template language. |
+| CSS    | Cascading Style Sheets            | Used by the custom login theme. |
+| DOM    | Document Object Model             | Referenced in the theme description. |
 
 ## Acknowledgement
 

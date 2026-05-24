@@ -4,7 +4,7 @@ users:
     sn: Rytis
     mail: rytis@cvdlink.local
     password: changeme
-    groups: [admins, researchers]
+    groups: [admins]
   - uid: katie
     cn: Katie
     sn: Katie
@@ -28,7 +28,7 @@ users:
     sn: Sienna
     mail: sienna@cvdlink.local
     password: changeme
-    groups: [healthcare-professionals, researchers]
+    groups: [researchers]
 
 groups:
   - healthcare-professionals

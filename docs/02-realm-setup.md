@@ -129,4 +129,20 @@ Decode the resulting `access_token` at https://jwt.io to inspect claims. The nex
 
 ---
 
+## 2.8 Abbreviations
+
+Terms that appear above. Full glossary in
+[`04-ldap.md` §4.1](04-ldap.md#41-abbreviations).
+
+| Short | Long                        | Used here for |
+|-------|-----------------------------|----------------|
+| OIDC  | OpenID Connect              | Client type ("OpenID Connect"). |
+| PKCE  | Proof Key for Code Exchange | Required for the public `cvdlink-user` client. |
+| JWT   | JSON Web Token              | The access token whose `realm_access.roles` you map. |
+| RBAC  | Role-Based Access Control   | The authorization model — realm roles attached to users. |
+| URI   | Uniform Resource Identifier | Redirect URIs configured on the client. |
+| S256  | SHA-256                     | PKCE code-challenge method (`S256`, not `plain`). |
+
+---
+
 **Next:** [`03-oidc-flow.md`](03-oidc-flow.md) — the actual auth flows (Authorization Code + PKCE, Client Credentials).

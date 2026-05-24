@@ -242,4 +242,33 @@ This kills the Keycloak SSO session.
 
 ---
 
+## 3.6 Abbreviations
+
+Terms that appear in this doc. Full glossary in
+[`04-ldap.md` §4.1](04-ldap.md#41-abbreviations).
+
+| Short  | Long                              | Used here for |
+|--------|-----------------------------------|----------------|
+| OIDC   | OpenID Connect                    | The protocol Keycloak speaks. |
+| OAuth  | Open Authorization (OAuth 2.0)    | The framework OIDC layers on top of. |
+| JWT    | JSON Web Token                    | The signed bearer token. |
+| JWKS   | JSON Web Key Set                  | Where the resource server fetches verification keys. |
+| PKCE   | Proof Key for Code Exchange       | Public-client protection in §3.1. |
+| RS256  | RSA Signature with SHA-256        | JWT signing algorithm shown in the header. |
+| SHA256 | Secure Hash Algorithm, 256 bits   | Builds the PKCE `code_challenge`. |
+| BFF    | Backend-for-Frontend              | The httpOnly-cookie pattern mentioned in §3.4. |
+| SSO    | Single Sign-On                    | The session `end_session_endpoint` terminates. |
+| XSS    | Cross-Site Scripting              | The threat against tokens in `localStorage`. |
+| MITM   | Man-In-The-Middle                 | The PKCE threat model in §3.1. |
+| CSRF   | Cross-Site Request Forgery        | What the `state` parameter protects against. |
+| TTL    | Time To Live                      | JWKS cache lifetime. |
+| kid    | Key ID                            | JWT header field that selects the JWKS key. |
+| iss    | Issuer (claim)                    | JWT claim asserting which realm issued the token. |
+| aud    | Audience (claim)                  | JWT claim naming the intended recipient. |
+| exp    | Expiration (claim)                | JWT claim with the expiry epoch. |
+| azp    | Authorized Party (claim)          | JWT claim naming the client that requested the token. |
+| sub    | Subject (claim)                   | Stable user ID inside the JWT. |
+
+---
+
 **Next:** [`../examples/cvdlink-login-sample`](../examples/cvdlink-login-sample) and [`../examples/python-api`](../examples/python-api) — runnable code that implements everything above.

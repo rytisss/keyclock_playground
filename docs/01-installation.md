@@ -113,4 +113,20 @@ docker compose down -v
 
 ---
 
+## 1.6 Abbreviations
+
+Terms that appear above. The full glossary is in
+[`04-ldap.md` §4.1](04-ldap.md#41-abbreviations).
+
+| Short | Long                        | Used here for |
+|-------|-----------------------------|----------------|
+| OIDC  | OpenID Connect              | The discovery document at `/.well-known/openid-configuration`. |
+| JWT   | JSON Web Token              | Tokens issued by Keycloak. |
+| JWKS  | JSON Web Key Set            | Public keys at `jwks_uri`. |
+| PKCE  | Proof Key for Code Exchange | The flow used by the `cvdlink-user` client. |
+| TLS   | Transport Layer Security    | What `start-dev` does *not* enable. |
+| URI   | Uniform Resource Identifier | The endpoint columns. |
+
+---
+
 **Next:** [`02-realm-setup.md`](02-realm-setup.md) — manual realm setup (click-by-click), or skip to [`03-oidc-flow.md`](03-oidc-flow.md) for the auth flows.

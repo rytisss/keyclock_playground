@@ -50,3 +50,19 @@ To hit `/admin`, get a token for the `admin` user (who holds `cvdlink-admin`) vi
 3. Verifies signature (RS256), `iss`, and `exp` via `jwt.decode(..., issuer=KC_ISSUER)`.
 4. Optional: `aud` validation. Disabled by default — Keycloak doesn't add your client ID to `aud` unless you add an Audience mapper. See `docs/03-oidc-flow.md` §3.3.
 5. Role check: reads `realm_access.roles` from the payload.
+
+## Abbreviations
+
+Terms used in this README. Full glossary in
+[`../../docs/04-ldap.md` §4.1](../../docs/04-ldap.md#41-abbreviations).
+
+| Short | Long                              | Used here for |
+|-------|-----------------------------------|----------------|
+| JWT   | JSON Web Token                    | What the API validates. |
+| JWKS  | JSON Web Key Set                  | Where the API fetches public keys. |
+| OIDC  | OpenID Connect                    | The protocol providing JWKS. |
+| RS256 | RSA Signature with SHA-256        | The signature algorithm verified. |
+| PKCE  | Proof Key for Code Exchange       | The flow used by the partner login sample. |
+| API   | Application Programming Interface | This service. |
+| RBAC  | Role-Based Access Control         | `cvdlink-admin` role check. |
+| URI   | Uniform Resource Identifier       | `KC_ISSUER`, `KC_JWKS_URI` env vars. |
